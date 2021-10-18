@@ -3,9 +3,9 @@ package agh.ics.oop;
 import java.util.Arrays;
 
 public class World {
-    static void run(Direction[] args){
-        for(Direction arg : args){
-            String message = "Zwierzak idzie "+ switch (arg) {
+    static void run(Direction[] args) {
+        for (Direction arg : args) {
+            String message = "Zwierzak idzie " + switch (arg) {
                 case FORWARD -> "idzie do przodu";
                 case BACKWARD -> "idzie do tyłu";
                 case RIGHT -> "skręca w prawo";
@@ -16,10 +16,10 @@ public class World {
         }
     }
 
-    static Direction[] stringsToDirections(String[] args){
+    static Direction[] stringsToDirections(String[] args) {
         Direction[] ret = new Direction[args.length];
         int j = 0;
-        for(int i = 0; i < args.length; i++){
+        for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "f":
                     ret[j++] = Direction.FORWARD;
