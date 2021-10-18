@@ -41,7 +41,7 @@ public class World {
 
     public static void main(String[] args) {
         System.out.println("Start");
-        run(stringsToDirections(new String[]{"f", "r", "l", "ignore", "b"}));
+        run(stringsToDirections(args));
         System.out.println("Stop");
     }
 }
