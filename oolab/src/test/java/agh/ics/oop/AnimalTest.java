@@ -40,16 +40,13 @@ class AnimalTest {
 
     @Test
     void shouldNotLeaveMap(){
-        Vector2d mapLowerLeft = new Vector2d(0,0);
-        Vector2d mapUpperRight = new Vector2d(4,4);
-
         Animal animal = new Animal();
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 10; j++) {
                 animal.move(MoveDirection.FORWARD);
             }
-            assertTrue(animal.getPosition().follows(mapLowerLeft)
-                    && animal.getPosition().precedes(mapUpperRight));
+            assertTrue(animal.getPosition().follows(Animal.MAP_LOWER_LEFT)
+                    && animal.getPosition().precedes(Animal.MAP_UPPER_RIGHT));
             animal.move(MoveDirection.LEFT);
         }
     }

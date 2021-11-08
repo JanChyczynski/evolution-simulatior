@@ -4,6 +4,9 @@ public class Animal {
     private MapDirection orientation = MapDirection.NORTH;
     private Vector2d position = new Vector2d(2,2);
 
+    public static final Vector2d MAP_LOWER_LEFT = new Vector2d(0,0);
+    public static final Vector2d MAP_UPPER_RIGHT = new Vector2d(4,4);
+
     public MapDirection getOrientation() {
         return orientation;
     }
@@ -13,8 +16,7 @@ public class Animal {
     }
 
     public void move(MoveDirection direction){
-        Vector2d mapLowerLeft = new Vector2d(0,0);
-        Vector2d mapUpperRight = new Vector2d(4,4);
+
         Vector2d newPosition = new Vector2d(position);
         switch (direction){
             case FORWARD:
@@ -30,7 +32,7 @@ public class Animal {
                 orientation = orientation.previous();
                 break;
         }
-        if(newPosition.follows(mapLowerLeft) && newPosition.precedes(mapUpperRight)){
+        if(newPosition.follows(MAP_LOWER_LEFT) && newPosition.precedes(MAP_UPPER_RIGHT)){
             position = new Vector2d(newPosition);
         }
     }
