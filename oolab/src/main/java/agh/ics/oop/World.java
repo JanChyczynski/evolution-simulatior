@@ -40,11 +40,12 @@ public class World {
     }
 
     public static void main(String[] args) {
-        Animal Zenek = new Animal();
-        Zenek.move(MoveDirection.RIGHT);
-        for (int i = 0; i < 5; i++) {
-            Zenek.move(MoveDirection.FORWARD);
+        OptionParser parser = new OptionParser();
+        MoveDirection[] moves = parser.parse(args);
+        Animal zenek = new Animal();
+        for (MoveDirection move : moves) {
+            zenek.move(move);
+        System.out.println(zenek);
         }
-        System.out.println(Zenek);
     }
 }
