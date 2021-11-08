@@ -40,10 +40,11 @@ public class World {
     }
 
     public static void main(String[] args) {
-
-        System.out.println(MapDirection.EAST);
-        System.out.println(MapDirection.WEST.previous());
-        System.out.println(MapDirection.NORTH.next());
-        System.out.println(MapDirection.SOUTH.toUnitVector());
+        Animal Zenek = new Animal();
+        Zenek.move(MoveDirection.RIGHT);
+        for (int i = 0; i < 5; i++) {
+            Zenek.move(MoveDirection.FORWARD);
+        }
+        System.out.println(Zenek);
     }
 }

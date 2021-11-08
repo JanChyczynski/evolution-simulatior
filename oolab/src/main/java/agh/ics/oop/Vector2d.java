@@ -4,6 +4,10 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 public record Vector2d(int x, int y) {
+    public Vector2d(Vector2d another){
+        this(another.x(), another.y());
+    }
+
     public boolean precedes(Vector2d other) {
         return x <= other.x && y <= other.y;
     }
