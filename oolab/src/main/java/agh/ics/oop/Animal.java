@@ -2,10 +2,21 @@ package agh.ics.oop;
 
 public class Animal {
     private MapDirection orientation = MapDirection.NORTH;
-    private Vector2d position = new Vector2d(2,2);
+    private Vector2d position;
+    private IWorldMap map;
 
     public static final Vector2d MAP_LOWER_LEFT = new Vector2d(0,0);
     public static final Vector2d MAP_UPPER_RIGHT = new Vector2d(4,4);
+
+    public Animal(IWorldMap map){
+        this(map, new Vector2d(2, 2));
+    }
+
+    public Animal(IWorldMap map, Vector2d initialPosition) {
+        this.map = map;
+        position = initialPosition;
+        this.map.place(this);
+    }
 
     public MapDirection getOrientation() {
         return orientation;
@@ -32,16 +43,18 @@ public class Animal {
                 orientation = orientation.previous();
                 break;
         }
-        if(newPosition.follows(MAP_LOWER_LEFT) && newPosition.precedes(MAP_UPPER_RIGHT)){
+        if(map.canMoveTo(newPosition)){
             position = new Vector2d(newPosition);
         }
     }
 
     @Override
     public String toString() {
-        return "Animal{" +
-                "direction=" + orientation +
-                ", position=" + position +
-                '}';
+        return switch (orientation){
+            case NORTH -> "^";
+            case EAST ->  ">";
+            case SOUTH -> "v";
+            case WEST -> "<";
+        };
     }
 }
