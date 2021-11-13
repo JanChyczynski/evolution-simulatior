@@ -40,12 +40,11 @@ public class World {
     }
 
     public static void main(String[] args) {
-        RectangularMap map = new RectangularMap(5, 10);
-        Animal zenek = new Animal(map, new Vector2d(0,0));
-        Animal franek = new Animal(map, new Vector2d(1,2));
-        System.out.println(map);
-        zenek.move(MoveDirection.RIGHT);
-        zenek.move(MoveDirection.FORWARD);
+        MoveDirection[] directions = new OptionParser().parse(args);
+        IWorldMap map = new RectangularMap(10, 5);
+        Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
+        IEngine engine = new SimulationEngine(directions, map, positions);
+        engine.run();
         System.out.println(map);
     }
 }
