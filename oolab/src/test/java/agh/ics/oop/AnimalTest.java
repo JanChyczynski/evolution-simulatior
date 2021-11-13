@@ -8,7 +8,8 @@ class AnimalTest {
 
     @Test
     void move() {
-        Animal animal = new Animal();
+        IWorldMap map = new RectangularMap(4, 4);
+        Animal animal = new Animal(map, new Vector2d(2, 2));
         assertEquals(animal.getPosition(), new Vector2d(2,2));
         assertEquals(animal.getOrientation(), MapDirection.NORTH);
 
@@ -40,7 +41,8 @@ class AnimalTest {
 
     @Test
     void shouldNotLeaveMap(){
-        Animal animal = new Animal();
+        IWorldMap map = new RectangularMap(4, 4);
+        Animal animal = new Animal(map, new Vector2d(2, 2));
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 10; j++) {
                 animal.move(MoveDirection.FORWARD);

@@ -40,12 +40,12 @@ public class World {
     }
 
     public static void main(String[] args) {
-        OptionParser parser = new OptionParser();
-        MoveDirection[] moves = parser.parse(args);
-        Animal zenek = new Animal();
-        for (MoveDirection move : moves) {
-            zenek.move(move);
-        System.out.println(zenek);
-        }
+        RectangularMap map = new RectangularMap(5, 10);
+        Animal zenek = new Animal(map, new Vector2d(0,0));
+        Animal franek = new Animal(map, new Vector2d(1,2));
+        System.out.println(map);
+        zenek.move(MoveDirection.RIGHT);
+        zenek.move(MoveDirection.FORWARD);
+        System.out.println(map);
     }
 }

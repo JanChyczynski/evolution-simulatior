@@ -43,7 +43,7 @@ public class Animal {
                 orientation = orientation.previous();
                 break;
         }
-        if(map.canMoveTo(newPosition)){
+        if(map.move(position, newPosition)){
             position = new Vector2d(newPosition);
         }
     }

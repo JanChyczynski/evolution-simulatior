@@ -40,4 +40,16 @@ public interface IWorldMap {
      * @return Object or null if the position is not occupied.
      */
     Object objectAt(Vector2d position);
+
+    /**
+     * Return true if given position on the map is occupied. Should not be
+     * confused with canMove since there might be empty positions where the animal
+     * cannot move.
+     *
+     * @param start The position that object will be moved from
+     * @param end The position that object will be moved to
+     * @return True if the start is occupied and end is not occupied
+     * @authon not apohllo.
+     */
+    boolean move(Vector2d start, Vector2d end);
 }
