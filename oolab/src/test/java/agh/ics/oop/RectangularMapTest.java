@@ -57,7 +57,7 @@ class RectangularMapTest {
         assert(isNull(field.objectAt(new Vector2d(-1,0))));
         assert(isNull(field.objectAt(new Vector2d(0,11))));
         assertFalse (isNull(field.objectAt(new Vector2d(0,0))));
-        assert (field.objectAt(new Vector2d(0,0)) == animal);
+        assert (((MapElementsSet)field.objectAt(new Vector2d(0,0))).contains(animal));
     }
 
 }
