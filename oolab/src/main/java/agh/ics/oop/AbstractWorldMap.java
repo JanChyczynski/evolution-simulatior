@@ -5,7 +5,7 @@ import java.util.Map;
 
 import static java.util.Objects.isNull;
 
-abstract public class AbstractWorldMap implements IWorldMap{
+abstract public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
     protected final Map<Vector2d, MapElementsSet> map = new HashMap<>();
     protected final MapVisualiser mapVisualiser;
 
@@ -26,6 +26,7 @@ abstract public class AbstractWorldMap implements IWorldMap{
                 map.put(animal.getPosition(), new MapElementsSet());
             }
             map.get(animal.getPosition()).add(animal);
+            animal.addObserver(this);
             return true;
         }
         return false;
@@ -37,12 +38,12 @@ abstract public class AbstractWorldMap implements IWorldMap{
     }
 
     @Override
-    public Object objectAt(Vector2d position) {
+    public MapElementsSet objectAt(Vector2d position) {
         return map.get(position);
     }
 
     @Override
-    public boolean move(Vector2d start, Vector2d end) {
+    public void positionChanged(Vector2d start, Vector2d end) {
         if (map.containsKey(start) && !isNull(map.get(start).getInstanceOfClass(Animal.class))
                 && canMoveTo(end)) {
             Animal movedAnimal = (Animal) map.get(start).getInstanceOfClass(Animal.class);
@@ -51,9 +52,9 @@ abstract public class AbstractWorldMap implements IWorldMap{
                 map.put(end, new MapElementsSet());
             }
             map.get(end).add(movedAnimal);
-            return true;
+//            return true;
         }
-        return false;
+//        return false;
     }
 
     abstract public Vector2d bottomLeftCorner();

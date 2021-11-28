@@ -44,7 +44,7 @@ class GrassFieldTest {
 
     @Test
     void objectAt() {
-        GrassField field = new GrassField(1);
+        GrassField field = new GrassField(0);
 
         assert(isNull(field.objectAt(new Vector2d(0,0))));
 
