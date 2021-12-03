@@ -1,15 +1,22 @@
 package agh.ics.oop;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
-public class MapElementsSet extends HashSet<Object>{
+public class MapElementsSet extends TreeSet<IMapElement> {
+
     private static final String EMPTY_CELL = " ";
 
-//    Set<Object> set = new HashSet<Object>();
+    public MapElementsSet() {
+        super(Comparator.comparing(IMapElement::displayPriority)
+                        .thenComparing(IMapElement::hashCode));
 
-    public Object getInstanceOfClass(Class<?> cls){
-        for(Object obj : this){
+    }
+
+    public IMapElement getInstanceOfClass(Class<?> cls){
+        for(IMapElement obj : this){
             if(obj.getClass() == cls){
                 return obj;
             }
@@ -17,17 +24,14 @@ public class MapElementsSet extends HashSet<Object>{
         return null;
     }
 
+    public boolean isTraversable(){
+        return this.stream().allMatch(IMapElement::isTraversable);
+    }
+
     @Override
     public String toString(){
-        Animal animal = (Animal) getInstanceOfClass(Animal.class);
-        if(animal != null)
-        {
-            return animal.toString();
-        }
-        Grass grass = (Grass) getInstanceOfClass(Grass.class);
-        if(grass != null)
-        {
-            return grass.toString();
+        if(!this.isEmpty()){
+            return this.last().toString();
         }
         return EMPTY_CELL;
     }

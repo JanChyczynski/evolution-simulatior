@@ -16,7 +16,7 @@ abstract public class AbstractWorldMap implements IWorldMap, IPositionChangeObse
     @Override
     public boolean canMoveTo(Vector2d position) {
         return !map.containsKey(position)
-                || isNull(map.get(position).getInstanceOfClass(Animal.class));
+                || map.get(position).isTraversable();
     }
 
     @Override
@@ -43,15 +43,15 @@ abstract public class AbstractWorldMap implements IWorldMap, IPositionChangeObse
     }
 
     @Override
-    public void positionChanged(Vector2d start, Vector2d end) {
-        if (map.containsKey(start) && !isNull(map.get(start).getInstanceOfClass(Animal.class))
+    public void positionChanged(Vector2d start, Vector2d end, IMapElement movedElement) {
+        if (map.containsKey(start) && map.get(start).contains(movedElement)
                 && canMoveTo(end)) {
-            Animal movedAnimal = (Animal) map.get(start).getInstanceOfClass(Animal.class);
-            map.get(start).remove(movedAnimal);
+
+            map.get(start).remove(movedElement);
             if(!map.containsKey(end)){
                 map.put(end, new MapElementsSet());
             }
-            map.get(end).add(movedAnimal);
+            map.get(end).add(movedElement);
 //            return true;
         }
 //        return false;

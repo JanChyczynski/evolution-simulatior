@@ -19,20 +19,12 @@ public class World {
     static Direction[] stringsToDirections(String[] args) {
         Direction[] ret = new Direction[args.length];
         int j = 0;
-        for (int i = 0; i < args.length; i++) {
-            switch (args[i]) {
-                case "f":
-                    ret[j++] = Direction.FORWARD;
-                    break;
-                case "b":
-                    ret[j++] = Direction.BACKWARD;
-                    break;
-                case "r":
-                    ret[j++] = Direction.RIGHT;
-                    break;
-                case "l":
-                    ret[j++] = Direction.LEFT;
-                    break;
+        for (String arg : args) {
+            switch (arg) {
+                case "f" -> ret[j++] = Direction.FORWARD;
+                case "b" -> ret[j++] = Direction.BACKWARD;
+                case "r" -> ret[j++] = Direction.RIGHT;
+                case "l" -> ret[j++] = Direction.LEFT;
             }
         }
 

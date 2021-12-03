@@ -3,7 +3,7 @@ package agh.ics.oop;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Animal {
+public class Animal implements IMapElement{
     private MapDirection orientation = MapDirection.NORTH;
     private Vector2d position;
     private final IWorldMap map;
@@ -31,6 +31,16 @@ public class Animal {
         return position;
     }
 
+    @Override
+    public int displayPriority() {
+        return 1;
+    }
+
+    @Override
+    public boolean isTraversable() {
+        return false;
+    }
+
     public void move(MoveDirection direction){
 
         Vector2d newPosition = new Vector2d(position);
@@ -41,10 +51,13 @@ public class Animal {
             case LEFT -> orientation = orientation.previous();
         }
         if(map.canMoveTo(newPosition)){
-            for(IPositionChangeObserver observer : observers){
-                observer.positionChanged(position, newPosition);
-            }
+            Vector2d oldPosition = position;
             position = new Vector2d(newPosition);
+            if(!oldPosition.equals(newPosition)){
+                for(IPositionChangeObserver observer : observers){
+                    observer.positionChanged(oldPosition, newPosition, this);
+                }
+            }
         }
     }
 
