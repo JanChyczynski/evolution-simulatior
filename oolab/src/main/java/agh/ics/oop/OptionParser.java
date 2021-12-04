@@ -12,6 +12,7 @@ public class OptionParser {
                 case "b", "backward" -> ret[j++] = MoveDirection.BACKWARD;
                 case "r", "right" -> ret[j++] = MoveDirection.RIGHT;
                 case "l", "left" -> ret[j++] = MoveDirection.LEFT;
+                default -> throw new IllegalArgumentException(s + " argument is invalid");
             }
         }
 

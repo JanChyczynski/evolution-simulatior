@@ -29,7 +29,10 @@ abstract public class AbstractWorldMap implements IWorldMap, IPositionChangeObse
             animal.addObserver(this);
             return true;
         }
-        return false;
+        else {
+            throw new IllegalArgumentException("Tried to place on position " + animal.getPosition().toString()
+                                             + " which is blocked");
+        }
     }
 
     @Override

@@ -29,6 +29,9 @@ class GrassFieldTest {
 
         assert (field1.isOccupied(new Vector2d(0,0)));
         assert (field2.isOccupied(new Vector2d(0,0)));
+
+        assertThrows(IllegalArgumentException.class, ()->field1.place(animal));
+        assertThrows(IllegalArgumentException.class, ()->field2.place(animal));
     }
 
     @Test
