@@ -52,7 +52,7 @@ public class Animal implements IMapElement{
         }
         if(map.canMoveTo(newPosition)){
             Vector2d oldPosition = position;
-            position = new Vector2d(newPosition);
+            position = newPosition;
             if(!oldPosition.equals(newPosition)){
                 for(IPositionChangeObserver observer : observers){
                     observer.positionChanged(oldPosition, newPosition, this);

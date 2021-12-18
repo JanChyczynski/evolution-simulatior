@@ -1,8 +1,6 @@
 package agh.ics.oop;
 
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.TreeSet;
 
 public class MapElementsSet extends TreeSet<IMapElement> {

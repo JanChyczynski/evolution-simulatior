@@ -3,7 +3,6 @@ package agh.ics.oop;
 import java.util.Random;
 
 import static java.lang.Math.sqrt;
-import static java.util.Objects.isNull;
 
 public class GrassField extends AbstractWorldMap {
     MapBoundary boundary;
@@ -43,36 +42,3 @@ public class GrassField extends AbstractWorldMap {
         return boundary.upperRightCorner();
     }
 }
-
-
-//    @Override
-//    public Vector2d bottomLeftCorner(){
-//        Vector2d corner = null;
-//        for(MapElementsSet elementsSet : map.values()){
-//            Animal animal = (Animal) elementsSet.getInstanceOfClass(Animal.class);
-//            if(!isNull(animal)) {
-//                if (isNull(corner)) {
-//                    corner = animal.getPosition();
-//                } else {
-//                    corner = corner.lowerLeft(animal.getPosition());
-//                }
-//            }
-//        }
-//        return corner;
-//    }
-//
-//    @Override
-//    public Vector2d upperRightCorner(){
-//        Vector2d corner = null;
-//        for(MapElementsSet elementsSet : map.values()){
-//            Animal animal = (Animal) elementsSet.getInstanceOfClass(Animal.class);
-//            if(!isNull(animal)) {
-//                if (isNull(corner)) {
-//                    corner = animal.getPosition();
-//                } else {
-//                    corner = corner.upperRight(animal.getPosition());
-//                }
-//            }
-//        }
-//        return corner;
-//    }

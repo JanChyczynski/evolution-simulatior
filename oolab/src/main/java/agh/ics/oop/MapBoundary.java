@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import static java.util.Objects.isNull;
 
 public class MapBoundary implements IPositionChangeObserver {
     private final SortedMap<Vector2d, Integer> horizontal = new TreeMap<Vector2d, Integer>(Comparator
@@ -50,17 +49,3 @@ public class MapBoundary implements IPositionChangeObserver {
         add(end);
     }
 }
-
-//    private final Map<MapDirection, Integer> boundaryCoordinate = new EnumMap<MapDirection, Integer>(MapDirection.class);
-//    private final Map<MapDirection, Integer> objectsOnBoundaryCounter = new EnumMap<MapDirection, Integer>(MapDirection.class);
-//
-//    private boolean isOnBoundary(MapDirection direction, IMapElement element){
-//
-//    }
-//
-//    @Override
-//    public void positionChanged(Vector2d start, Vector2d end, IMapElement movedElement) {
-//        for(MapDirection direction : MapDirection.values()){
-//            if(direction.toUnitVector().multiply(boundaryCoordinate[direction]) == new Vector2d(direction.toUnitVector().x() * start.x(), direction.toUnitVector().y() * start.y()))
-//        }
-//    }
