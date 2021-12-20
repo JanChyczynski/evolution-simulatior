@@ -18,6 +18,8 @@ class AnimalTest {
         assertEquals(animal.getOrientation(), MapDirection.NORTH);
 
         animal.move(MoveDirection.BACKWARD);
+        animal.move(MoveDirection.RIGHT);
+        animal.move(MoveDirection.RIGHT);
         assertEquals(animal.getPosition(), new Vector2d(2,2));
         assertEquals(animal.getOrientation(), MapDirection.NORTH);
 

@@ -47,14 +47,15 @@ public class Animal implements IMapElement, IPositionChangePublisher {
     }
 
     public void move(MoveDirection direction){
-
-        Vector2d newPosition = new Vector2d(position);
+        orientation = orientation.rotate(direction);
         switch (direction) {
-            case FORWARD -> newPosition = position.add(orientation.toUnitVector());
-            case BACKWARD -> newPosition = position.add(orientation.toUnitVector().opposite());
-            case RIGHT -> orientation = orientation.next();
-            case LEFT -> orientation = orientation.previous();
+            case FORWARD, BACKWARD -> moveForward();
         }
+    }
+
+    private void moveForward() {
+        Vector2d newPosition = new Vector2d(position);
+        newPosition = position.add(orientation.toUnitVector());
         if(map.canMoveTo(newPosition)){
             Vector2d oldPosition = position;
             position = newPosition;
@@ -63,8 +64,7 @@ public class Animal implements IMapElement, IPositionChangePublisher {
             }
         }
     }
-
-
+    
     @Override
     public void addObserver(IPositionChangeObserver observer){
         observers.add(observer);
@@ -85,9 +85,13 @@ public class Animal implements IMapElement, IPositionChangePublisher {
     public String toString() {
         return switch (orientation){
             case NORTH -> "^";
+            case NORTH_EAST -> "/";
             case EAST ->  ">";
+            case SOUTH_EAST -> "\\";
             case SOUTH -> "v";
+            case SOUTH_WEST -> "/";
             case WEST -> "<";
+            case NORTH_WEST -> "\\";
         };
     }
 }
