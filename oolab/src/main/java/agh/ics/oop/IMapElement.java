@@ -6,4 +6,6 @@ public interface IMapElement {
     int displayPriority();
 
     boolean isTraversable();
+
+    String representationImagePath();
 }

@@ -3,7 +3,7 @@ package agh.ics.oop;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Animal implements IMapElement{
+public class Animal implements IMapElement, IPositionChangePublisher {
     private MapDirection orientation = MapDirection.NORTH;
     private Vector2d position;
     private final IWorldMap map;
@@ -41,6 +41,11 @@ public class Animal implements IMapElement{
         return false;
     }
 
+    @Override
+    public String representationImagePath() {
+        return "src/main/resources/up.png";
+    }
+
     public void move(MoveDirection direction){
 
         Vector2d newPosition = new Vector2d(position);
@@ -54,19 +59,26 @@ public class Animal implements IMapElement{
             Vector2d oldPosition = position;
             position = newPosition;
             if(!oldPosition.equals(newPosition)){
-                for(IPositionChangeObserver observer : observers){
-                    observer.positionChanged(oldPosition, newPosition, this);
-                }
+                notifyAllObservers(newPosition, oldPosition);
             }
         }
     }
 
+
+    @Override
     public void addObserver(IPositionChangeObserver observer){
         observers.add(observer);
     }
 
+    @Override
     public void removeObserver(IPositionChangeObserver observer){
         observers.remove(observer);
+    }
+
+    private void notifyAllObservers(Vector2d newPosition, Vector2d oldPosition) {
+        for(IPositionChangeObserver observer : observers){
+            observer.positionChanged(oldPosition, newPosition, this);
+        }
     }
 
     @Override

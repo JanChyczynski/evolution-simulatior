@@ -13,6 +13,10 @@ public class MapElementsSet extends TreeSet<IMapElement> {
 
     }
 
+    public IMapElement representingElement(){
+        return this.last();
+    }
+
     public IMapElement getInstanceOfClass(Class<?> cls){
         for(IMapElement obj : this){
             if(obj.getClass() == cls){

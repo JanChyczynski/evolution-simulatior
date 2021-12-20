@@ -17,6 +17,11 @@ public class Grass implements IMapElement {
         return true;
     }
 
+    @Override
+    public String representationImagePath() {
+        return "src/main/resources/grass.png";
+    }
+
     public Grass(Vector2d position) {
         this.position = position;
     }
