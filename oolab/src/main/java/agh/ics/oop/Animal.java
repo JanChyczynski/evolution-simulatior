@@ -1,5 +1,7 @@
 package agh.ics.oop;
 
+import agh.ics.oop.gui.Genome;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -7,6 +9,8 @@ public class Animal implements IMapElement, IPositionChangePublisher {
     private MapDirection orientation = MapDirection.NORTH;
     private Vector2d position;
     private final IWorldMap map;
+    private final Genome genom;
+
     private final Set<IPositionChangeObserver> observers;
 
     public static final Vector2d MAP_LOWER_LEFT = new Vector2d(0,0);
@@ -19,6 +23,8 @@ public class Animal implements IMapElement, IPositionChangePublisher {
     public Animal(IWorldMap map, Vector2d initialPosition) {
         this.map = map;
         position = initialPosition;
+        genom = new Genome();
+
         observers = new HashSet<>();
         this.map.place(this);
     }
@@ -46,6 +52,10 @@ public class Animal implements IMapElement, IPositionChangePublisher {
         return "src/main/resources/up.png";
     }
 
+    public void move(){
+        move(MoveDirection.fromInt(genom.getRandomGene()));
+    }
+
     public void move(MoveDirection direction){
         orientation = orientation.rotate(direction);
         switch (direction) {
@@ -64,7 +74,7 @@ public class Animal implements IMapElement, IPositionChangePublisher {
             }
         }
     }
-    
+
     @Override
     public void addObserver(IPositionChangeObserver observer){
         observers.add(observer);

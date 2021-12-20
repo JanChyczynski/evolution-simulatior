@@ -30,7 +30,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
     @Override
     public void run() {
         for (int i = 0; i < moveDirections.length; i++) {
-            animals.get(i % animals.size()).move(moveDirections[i]);
+            animals.get(i % animals.size()).move();
             try{
                 Thread.sleep(moveDelay);
             } catch (InterruptedException e) {
