@@ -1,7 +1,5 @@
 package agh.ics.oop;
 
-import agh.ics.oop.gui.Genome;
-
 import java.util.HashSet;
 import java.util.Set;
 

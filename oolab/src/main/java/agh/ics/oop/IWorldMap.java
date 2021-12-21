@@ -40,4 +40,8 @@ public interface IWorldMap {
      * @return Object or null if the position is not occupied.
      */
     MapElementsSet objectAt(Vector2d position);
+
+    Vector2d bottomLeftCorner();
+
+    Vector2d upperRightCorner();
 }

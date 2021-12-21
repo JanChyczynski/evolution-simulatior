@@ -15,10 +15,9 @@ public class App extends Application {
     @Override
     public void init() throws Exception {
         try {
-            MoveDirection[] directions = new OptionParser().parse(getParameters().getRaw().toArray(new String[0]));
             map = new GrassField(10);
             Vector2d[] positions = {new Vector2d(0, 3), new Vector2d(6, 10)};
-            engine = new SimulationEngine(directions, map, positions);
+            engine = new SimulationEngine(map, positions);
             System.out.println(map);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());

@@ -60,9 +60,7 @@ abstract public class AbstractWorldMap implements IWorldMap, IPositionChangeObse
 //        return false;
     }
 
-    abstract public Vector2d bottomLeftCorner();
 
-    abstract public Vector2d upperRightCorner();
 
     @Override
     public String toString() {

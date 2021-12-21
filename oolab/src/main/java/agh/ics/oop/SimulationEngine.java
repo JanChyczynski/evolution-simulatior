@@ -6,17 +6,15 @@ import java.util.List;
 import java.util.Set;
 
 public class SimulationEngine implements IEngine, IPositionChangeObserver, Runnable {
-    private final MoveDirection[] moveDirections;
     private final IWorldMap worldMap;
     private final List<Animal> animals;
     private final Set<IPositionChangeObserver> observers;
     public final int moveDelay;
 
-    public SimulationEngine(MoveDirection[] moveDirections, IWorldMap worldMap, Vector2d[] initialPositions) {
+    public SimulationEngine(IWorldMap worldMap, Vector2d[] initialPositions) {
         observers = new HashSet<>();
-        this.moveDirections = moveDirections;
         this.worldMap = worldMap;
-        animals = new ArrayList<Animal>();
+        animals = new ArrayList<>();
         for(Vector2d position : initialPositions){
             animals.add(new Animal(this.worldMap, position));
         }
@@ -29,8 +27,10 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
 
     @Override
     public void run() {
-        for (int i = 0; i < moveDirections.length; i++) {
-            animals.get(i % animals.size()).move();
+        while(true) {
+            for(Animal animal : animals){
+                animal.move();
+            }
             try{
                 Thread.sleep(moveDelay);
             } catch (InterruptedException e) {
