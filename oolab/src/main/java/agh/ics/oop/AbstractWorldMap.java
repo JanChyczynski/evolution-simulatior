@@ -22,10 +22,7 @@ abstract public class AbstractWorldMap implements IWorldMap, IPositionChangeObse
     @Override
     public boolean place(Animal animal) {
         if (canMoveTo(animal.getPosition())) {
-            if(!map.containsKey(animal.getPosition())){
-                map.put(animal.getPosition(), new MapElementsSet());
-            }
-            map.get(animal.getPosition()).add(animal);
+            addToMap(animal);
             animal.addObserver(this);
             return true;
         }
@@ -33,6 +30,13 @@ abstract public class AbstractWorldMap implements IWorldMap, IPositionChangeObse
             throw new IllegalArgumentException("Tried to place on position " + animal.getPosition().toString()
                                              + " which is blocked");
         }
+    }
+
+    protected void addToMap(IMapElement element) {
+        if(!map.containsKey(element.getPosition())){
+            map.put(element.getPosition(), new MapElementsSet());
+        }
+        map.get(element.getPosition()).add(element);
     }
 
     @Override

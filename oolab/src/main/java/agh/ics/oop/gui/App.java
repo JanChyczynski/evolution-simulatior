@@ -9,13 +9,13 @@ import javafx.stage.Stage;
 
 public class App extends Application {
 
-    private AbstractWorldMap map;
+    private SteppeJungleMap map;
     private IEngine engine;
 
     @Override
     public void init() throws Exception {
         try {
-            map = new GrassField(10);
+            map = new SteppeJungleMap(15,15, 2);
             Vector2d[] positions = {new Vector2d(0, 3), new Vector2d(6, 10)};
             engine = new SimulationEngine(map, positions);
             System.out.println(map);
