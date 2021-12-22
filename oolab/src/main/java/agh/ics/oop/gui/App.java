@@ -16,8 +16,7 @@ public class App extends Application {
     public void init() throws Exception {
         try {
             map = new SteppeJungleMap(15,15, 2);
-            Vector2d[] positions = {new Vector2d(0, 3), new Vector2d(6, 10)};
-            engine = new SimulationEngine(map, positions);
+            engine = new SimulationEngine(map, 6);
             System.out.println(map);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());

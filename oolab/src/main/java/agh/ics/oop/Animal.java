@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Animal implements IMapElement, IPositionChangePublisher {
-    private MapDirection orientation = MapDirection.NORTH;
+    private MapDirection orientation;
     private Vector2d position;
     private final IWorldMap map;
     private final Genome genom;
@@ -22,6 +22,7 @@ public class Animal implements IMapElement, IPositionChangePublisher {
         this.map = map;
         position = initialPosition;
         genom = new Genome();
+        orientation = MapDirection.fromInt(genom.getRandomGene());
 
         observers = new HashSet<>();
         this.map.place(this);

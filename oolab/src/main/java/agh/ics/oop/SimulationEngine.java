@@ -5,24 +5,36 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Objects.isNull;
+
 public class SimulationEngine implements IEngine, IPositionChangeObserver, Runnable {
     private final SteppeJungleMap worldMap;
     private final List<Animal> animals;
     private final Set<IPositionChangeObserver> observers;
     public final int moveDelay;
 
-    public SimulationEngine(SteppeJungleMap worldMap, Vector2d[] initialPositions) {
+    public SimulationEngine(SteppeJungleMap worldMap, int initialPopulation) {
         observers = new HashSet<>();
         this.worldMap = worldMap;
         animals = new ArrayList<>();
-        for(Vector2d position : initialPositions){
-            animals.add(new Animal(this.worldMap, position));
+        createAnimals(initialPopulation);
+
+        moveDelay = 300;
+    }
+
+    private void createAnimals(int initialPopulation) {
+        Vector2d position = new Vector2d(0,0);
+        while(position != null && initialPopulation-- > 0)
+        {
+            position = worldMap.getRandomPositionSatisfying((p) ->!worldMap.isOccupied(p));
+            if(!isNull(position)){
+                animals.add(new Animal(this.worldMap, position));
+            }
         }
         for(Animal animal : animals)
         {
             animal.addObserver(this);
         }
-        moveDelay = 300;
     }
 
     @Override
