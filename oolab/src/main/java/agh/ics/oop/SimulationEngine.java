@@ -1,25 +1,29 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javafx.collections.transformation.SortedList;
+
+import java.util.*;
 
 import static java.util.Objects.isNull;
 
 public class SimulationEngine implements IEngine, IPositionChangeObserver, Runnable {
     private final SteppeJungleMap worldMap;
-    private final List<Animal> animals;
+    private final Set<Animal> animals;
     private final Set<IPositionChangeObserver> observers;
     public final int moveDelay;
+    private final int startEnergy, moveEnergy, plantEnergy;
 
-    public SimulationEngine(SteppeJungleMap worldMap, int initialPopulation) {
+    public SimulationEngine(SteppeJungleMap worldMap, int initialPopulation,
+                            int startEnergy, int moveEnergy, int plantEnergy) {
         observers = new HashSet<>();
         this.worldMap = worldMap;
-        animals = new ArrayList<>();
-        createAnimals(initialPopulation);
-
+        this.startEnergy = startEnergy;
+        this.moveEnergy = moveEnergy;
+        this.plantEnergy = plantEnergy;
         moveDelay = 300;
+
+        animals = new HashSet<>();
+        createAnimals(initialPopulation);
     }
 
     private void createAnimals(int initialPopulation) {
@@ -28,7 +32,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
         {
             position = worldMap.getRandomPositionSatisfying((p) ->!worldMap.isOccupied(p));
             if(!isNull(position)){
-                animals.add(new Animal(this.worldMap, position));
+                animals.add(new Animal(this.worldMap, position, startEnergy));
             }
         }
         for(Animal animal : animals)
@@ -40,10 +44,16 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
     @Override
     public void run() {
         while(true) {
-            worldMap.growGrass();
-            for(Animal animal : animals){
+            for (Iterator<Animal> iterator = animals.iterator(); iterator.hasNext(); ) {
+                Animal animal = iterator.next();
+                if (animal.getEnergy() <= 0) {
+                    worldMap.remove(animal);
+                    iterator.remove();
+                }
                 animal.move();
+                animal.setEnergy(animal.getEnergy() - moveEnergy);
             }
+            worldMap.growGrass();
             try{
                 Thread.sleep(moveDelay);
             } catch (InterruptedException e) {

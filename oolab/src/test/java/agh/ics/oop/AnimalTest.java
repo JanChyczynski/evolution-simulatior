@@ -49,8 +49,8 @@ class AnimalTest {
             for (int j = 0; j < 10; j++) {
                 animal.move(MoveDirection.FORWARD);
             }
-            assertTrue(animal.getPosition().follows(Animal.MAP_LOWER_LEFT)
-                    && animal.getPosition().precedes(Animal.MAP_UPPER_RIGHT));
+            assertTrue(animal.getPosition().follows(map.bottomLeftCorner())
+                    && animal.getPosition().precedes(map.upperRightCorner()));
             animal.move(MoveDirection.LEFT);
         }
     }

@@ -8,14 +8,13 @@ public class Animal implements IMapElement, IPositionChangePublisher {
     private Vector2d position;
     private final IWorldMap map;
     private final Genome genom;
+    private int energy;
 
     private final Set<IPositionChangeObserver> observers;
 
-    public static final Vector2d MAP_LOWER_LEFT = new Vector2d(0,0);
-    public static final Vector2d MAP_UPPER_RIGHT = new Vector2d(4,4);
-
-    public Animal(IWorldMap map){
-        this(map, new Vector2d(2, 2));
+    public Animal(IWorldMap map, Vector2d initialPosition, int energy) {
+        this(map, initialPosition);
+        this.energy = energy;
     }
 
     public Animal(IWorldMap map, Vector2d initialPosition) {
@@ -102,5 +101,13 @@ public class Animal implements IMapElement, IPositionChangePublisher {
             case WEST -> "<";
             case NORTH_WEST -> "\\";
         };
+    }
+
+    public void setEnergy(int energy) {
+        this.energy = energy;
+    }
+
+    public int getEnergy() {
+        return energy;
     }
 }

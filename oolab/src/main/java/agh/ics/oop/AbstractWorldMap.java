@@ -39,6 +39,21 @@ abstract public class AbstractWorldMap implements IWorldMap, IPositionChangeObse
         map.get(element.getPosition()).add(element);
     }
 
+    public void remove(Animal animal){
+        remove((IMapElement) animal);
+        animal.removeObserver(this);
+    }
+
+    public void remove(IMapElement element){
+        if (map.containsKey(element.getPosition()) && map.get(element.getPosition()).contains(element)) {
+            map.get(element.getPosition()).remove(element);
+        }
+        else {
+            throw new IllegalArgumentException("Tried to remove object from position " + element.getPosition().toString()
+                    + " but it's not there");
+        }
+    }
+
     @Override
     public boolean isOccupied(Vector2d position) {
         return map.containsKey(position) && !map.get(position).isEmpty();
