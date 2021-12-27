@@ -49,6 +49,9 @@ public class Grass implements IMapElement {
     }
 
     @Override
+    public boolean isHorny() { return false; }
+
+    @Override
     public String toString() {
         return "*";
     }

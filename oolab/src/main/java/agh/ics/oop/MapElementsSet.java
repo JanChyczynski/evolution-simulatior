@@ -1,10 +1,8 @@
 package agh.ics.oop;
 
-import java.util.Comparator;
-import java.util.OptionalInt;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MapElementsSet extends TreeSet<IMapElement> {
 
@@ -46,6 +44,16 @@ public class MapElementsSet extends TreeSet<IMapElement> {
                     .thenComparing(IMapElement::hashCode));
         }else{
             return hungryElements.stream().filter(p -> p.getEnergy() == maxEnergy.getAsInt()).collect(Collectors.toSet());
+        }
+    }
+
+    public List<IMapElement> getCoupleWithHighestEnergy(){
+        List<IMapElement> hornyElements = this.stream().filter(IMapElement::isHorny).
+                sorted(Comparator.comparing(IMapElement::getEnergy).thenComparing(IMapElement::hashCode).reversed()).collect(Collectors.toList());
+        if(hornyElements.size() < 2){
+            return null;
+        }else{
+            return hornyElements.subList(0, 2);
         }
     }
 

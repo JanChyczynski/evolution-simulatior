@@ -14,9 +14,6 @@ class RectangularMapTest {
 
         Animal animal = new Animal(field, new Vector2d(0,0));
 
-        assertFalse (field.canMoveTo(new Vector2d(0,0)));
-        assertFalse (field.canMoveTo(new Vector2d(-1,0)));
-        assertFalse (field.canMoveTo(new Vector2d(0,11)));
         assert (field.canMoveTo(new Vector2d(1,0)));
         assert (field.canMoveTo(new Vector2d(10,10)));
     }

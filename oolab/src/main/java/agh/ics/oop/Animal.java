@@ -7,10 +7,17 @@ public class Animal implements IMapElement, IPositionChangePublisher {
     private MapDirection orientation;
     private Vector2d position;
     private final IWorldMap map;
-    private final Genome genom;
+    private Genome genom;
     private int energy;
 
+    static final int BIRTH_ENERGY_RATIO = 4;
+
     private final Set<IPositionChangeObserver> observers;
+
+    public Animal(IWorldMap map, Vector2d initialPosition, int energy, Genome genome) {
+        this(map, initialPosition, energy);
+        this.genom = genome;
+    }
 
     public Animal(IWorldMap map, Vector2d initialPosition, int energy) {
         this(map, initialPosition);
@@ -42,7 +49,7 @@ public class Animal implements IMapElement, IPositionChangePublisher {
 
     @Override
     public boolean isTraversable() {
-        return false;
+        return true;
     }
 
     @Override
@@ -107,6 +114,16 @@ public class Animal implements IMapElement, IPositionChangePublisher {
     @Override
     public int getEnergy() {
         return energy;
+    }
+
+    @Override
+    public boolean isHorny() { return true; }
+
+    public Animal makeLove(Animal lover) {
+        Genome newGenome = genom.combined(lover.genom, Genome.SIZE*lover.getEnergy()/getEnergy());
+        setEnergy(getEnergy() - getEnergy()/BIRTH_ENERGY_RATIO);
+        lover.setEnergy(lover.getEnergy() - lover.getEnergy()/lover.BIRTH_ENERGY_RATIO);
+        return new Animal(map, getPosition(), getEnergy()/BIRTH_ENERGY_RATIO + lover.getEnergy()/BIRTH_ENERGY_RATIO, newGenome);
     }
 
     @Override

@@ -11,7 +11,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
     private final Set<Animal> animals;
     private final Set<IPositionChangeObserver> observers;
     public final int moveDelay;
-    private final int startEnergy, moveEnergy;
+    private final int startEnergy, moveEnergy, loveMinEnergy;
 
     public SimulationEngine(SteppeJungleMap worldMap, int initialPopulation,
                             int startEnergy, int moveEnergy) {
@@ -19,6 +19,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
         this.worldMap = worldMap;
         this.startEnergy = startEnergy;
         this.moveEnergy = moveEnergy;
+        loveMinEnergy = startEnergy/2;
         moveDelay = 300;
 
         animals = new HashSet<>();
@@ -53,6 +54,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
                 animal.setEnergy(animal.getEnergy() - moveEnergy);
             }
             handleEating();
+            handleReproduction();
             worldMap.growGrass();
             try{
                 Thread.sleep(moveDelay);
@@ -75,6 +77,23 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
                 for(IMapElement edible : edibles){
                     worldMap.remove(edible);
                 }
+            }
+        }
+    }
+
+    private void handleReproduction(){
+        for(MapElementsSet elements : worldMap.map.values()){
+            List<IMapElement> lovers = elements.getCoupleWithHighestEnergy();
+            if(!isNull(lovers)){
+                if(lovers.size() != 2){
+                    throw new IllegalStateException("MapElementSet returned couple which size is not 2");
+                }
+                if(lovers.get(0).getEnergy() >= loveMinEnergy &&
+                   lovers.get(0).getEnergy() >= loveMinEnergy ) {
+                    Animal child = ((Animal) lovers.get(0)).makeLove((Animal) lovers.get(1));
+                    animals.add(child);
+                }
+
             }
         }
     }

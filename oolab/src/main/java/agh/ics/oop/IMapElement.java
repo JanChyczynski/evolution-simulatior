@@ -15,5 +15,7 @@ public interface IMapElement {
 
     int getEnergy();
 
+    boolean isHorny();
+
     String representationImagePath();
 }
