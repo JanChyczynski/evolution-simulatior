@@ -46,6 +46,16 @@ public class Animal implements IMapElement, IPositionChangePublisher {
     }
 
     @Override
+    public boolean isEdible() {
+        return false;
+    }
+
+    @Override
+    public boolean isHungry() {
+        return true;
+    }
+
+    @Override
     public String representationImagePath() {
         return "src/main/resources/up.png";
     }
@@ -90,6 +100,16 @@ public class Animal implements IMapElement, IPositionChangePublisher {
     }
 
     @Override
+    public void setEnergy(int energy) {
+        this.energy = energy;
+    }
+
+    @Override
+    public int getEnergy() {
+        return energy;
+    }
+
+    @Override
     public String toString() {
         return switch (orientation){
             case NORTH -> "^";
@@ -101,13 +121,5 @@ public class Animal implements IMapElement, IPositionChangePublisher {
             case WEST -> "<";
             case NORTH_WEST -> "\\";
         };
-    }
-
-    public void setEnergy(int energy) {
-        this.energy = energy;
-    }
-
-    public int getEnergy() {
-        return energy;
     }
 }

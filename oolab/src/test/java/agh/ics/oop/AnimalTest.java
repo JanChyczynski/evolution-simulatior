@@ -10,6 +10,10 @@ class AnimalTest {
     void move() {
         IWorldMap map = new RectangularMap(4, 4);
         Animal animal = new Animal(map, new Vector2d(2, 2));
+        while (!animal.getOrientation().equals(MapDirection.NORTH))
+        {
+            animal.move(MoveDirection.FORWARD_RIGHT);
+        }
         assertEquals(animal.getPosition(), new Vector2d(2,2));
         assertEquals(animal.getOrientation(), MapDirection.NORTH);
 

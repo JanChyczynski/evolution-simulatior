@@ -11,15 +11,14 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
     private final Set<Animal> animals;
     private final Set<IPositionChangeObserver> observers;
     public final int moveDelay;
-    private final int startEnergy, moveEnergy, plantEnergy;
+    private final int startEnergy, moveEnergy;
 
     public SimulationEngine(SteppeJungleMap worldMap, int initialPopulation,
-                            int startEnergy, int moveEnergy, int plantEnergy) {
+                            int startEnergy, int moveEnergy) {
         observers = new HashSet<>();
         this.worldMap = worldMap;
         this.startEnergy = startEnergy;
         this.moveEnergy = moveEnergy;
-        this.plantEnergy = plantEnergy;
         moveDelay = 300;
 
         animals = new HashSet<>();
@@ -53,12 +52,29 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
                 animal.move();
                 animal.setEnergy(animal.getEnergy() - moveEnergy);
             }
+            handleEating();
             worldMap.growGrass();
             try{
                 Thread.sleep(moveDelay);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private void handleEating() {
+        for(MapElementsSet elements : worldMap.map.values()){
+            Set<IMapElement> edibles = elements.getEdible();
+            int energySum = edibles.stream().mapToInt(IMapElement::getEnergy).sum();
+            Set<IMapElement> eaters = elements.getHungryWithHighestEnergy();
+            for (IMapElement eater : eaters){
+                eater.setEnergy(eater.getEnergy()+energySum/eaters.size());
+            }
+            if(!eaters.isEmpty()) {
+                for(IMapElement edible : edibles){
+                    worldMap.remove(edible);
+                }
             }
         }
     }

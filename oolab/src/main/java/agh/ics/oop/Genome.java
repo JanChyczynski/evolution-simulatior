@@ -16,7 +16,6 @@ public class Genome {
     public Genome() {
         this.genes = new ArrayList<>(SIZE);
         randomize();
-        System.out.println(genes.size());
     }
 
     public List<Integer> getGenes() {

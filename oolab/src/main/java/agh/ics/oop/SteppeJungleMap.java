@@ -9,11 +9,13 @@ import static java.util.Objects.isNull;
 public class SteppeJungleMap extends AbstractWorldMap{
     private final int height, width;
     private int jungleHeight, jungleWidth;
+    private final int grassEnergy;
     private Vector2d jungleBottomLeftCorner, jungleUpperRightCorner;
 
-    public SteppeJungleMap(int height, int width, int jungleRatio) {
+    public SteppeJungleMap(int height, int width, int jungleRatio, int grassEnergy) {
         this.height = height;
         this.width = width;
+        this.grassEnergy = grassEnergy;
         createJungle(jungleRatio);
     }
 
@@ -37,12 +39,12 @@ public class SteppeJungleMap extends AbstractWorldMap{
         position = getRandomPositionSatisfying(isFreeOnSteppe);
         if(!isNull(position))
         {
-            addToMap(new Grass(position));
+            addToMap(new Grass(position, grassEnergy));
         }
         position = getRandomPositionSatisfying((p) -> !isOccupied(p), jungleBottomLeftCorner, jungleUpperRightCorner);
         if(!isNull(position))
         {
-            addToMap(new Grass(position));
+            addToMap(new Grass(position, grassEnergy));
         }
     }
 

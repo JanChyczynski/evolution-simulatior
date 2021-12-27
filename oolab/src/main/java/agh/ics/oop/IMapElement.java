@@ -7,5 +7,13 @@ public interface IMapElement {
 
     boolean isTraversable();
 
+    boolean isEdible();
+
+    boolean isHungry();
+
+    void setEnergy(int energy);
+
+    int getEnergy();
+
     String representationImagePath();
 }
