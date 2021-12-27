@@ -4,6 +4,7 @@ import agh.ics.oop.*;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
@@ -15,13 +16,17 @@ import java.io.FileNotFoundException;
 import java.util.NoSuchElementException;
 
 public class MapGui implements IPositionChangeObserver {
-    public static final int CELL_WIDTH = 20;
-    public static final int CELL_HEIGHT = 20;
+    public static final int CELL_WIDTH  = 60;
+    public static final int CELL_HEIGHT = 60;
+    private int fullEnergy;
     private final AbstractWorldMap map;
     private final GridPane grid;
+    private final ImageLoader images;
 
-    public MapGui(AbstractWorldMap map, IEngine engine) {
+    public MapGui(AbstractWorldMap map, IEngine engine, ImageLoader images) {
         this.map = map;
+        fullEnergy = 100;
+        this.images = images;
 
         grid = new GridPane();
         grid.setGridLinesVisible(true);
@@ -73,17 +78,21 @@ public class MapGui implements IPositionChangeObserver {
     }
 
     public void showMapElement(IMapElement element, int i, int j, GridPane grid) {
-        try {
-            Image image = new Image(new FileInputStream(element.representationImagePath()));
-            ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(CELL_WIDTH);
-            imageView.setFitHeight(CELL_HEIGHT);
+        Image image = images.getImage(element.representationImagePath());
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(CELL_WIDTH);
+        imageView.setFitHeight(CELL_HEIGHT);
+        expressEnergy(element, imageView);
+        imageView.setRotate(360/MapDirection.values().length * element.getOrientation().toInt());
 
-            grid.add(imageView, i, j, 1, 1);
-            GridPane.setHalignment(imageView, HPos.CENTER);
-        } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
+        grid.add(imageView, i, j, 1, 1);
+        GridPane.setHalignment(imageView, HPos.CENTER);
+    }
+
+    private void expressEnergy(IMapElement element, ImageView imageView) {
+        ColorAdjust energySaturation = new ColorAdjust();
+        energySaturation.setSaturation(((double) element.getEnergy() / fullEnergy - 0.5) * 2);
+        imageView.setEffect(energySaturation);
     }
 
     public void addStringAsCenteredLabel(String objectsRepresentation, int i, int j, GridPane grid) {
@@ -99,5 +108,13 @@ public class MapGui implements IPositionChangeObserver {
             showColumnsAndRowsLabels();
             showMap(new Vector2d(1, 1));
         });
+    }
+
+    public int getFullEnergy() {
+        return fullEnergy;
+    }
+
+    public void setFullEnergy(int fullEnergy) {
+        this.fullEnergy = fullEnergy;
     }
 }

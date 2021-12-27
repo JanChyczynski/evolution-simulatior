@@ -64,7 +64,7 @@ public class Animal implements IMapElement, IPositionChangePublisher {
 
     @Override
     public String representationImagePath() {
-        return "src/main/resources/up.png";
+        return "src/main/resources/elon.png";
     }
 
     public void move(){

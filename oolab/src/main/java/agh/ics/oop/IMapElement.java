@@ -3,6 +3,10 @@ package agh.ics.oop;
 public interface IMapElement {
     Vector2d getPosition();
 
+    default MapDirection getOrientation(){
+        return MapDirection.NORTH;
+    }
+
     int displayPriority();
 
     boolean isTraversable();

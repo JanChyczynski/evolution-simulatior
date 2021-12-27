@@ -92,6 +92,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
                    lovers.get(0).getEnergy() >= loveMinEnergy ) {
                     Animal child = ((Animal) lovers.get(0)).makeLove((Animal) lovers.get(1));
                     animals.add(child);
+                    child.addObserver(this);
                 }
 
             }
