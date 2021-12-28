@@ -4,6 +4,7 @@ import agh.ics.oop.IPausable;
 import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.SimulationParameters;
 import agh.ics.oop.SteppeJungleMap;
+import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
@@ -30,15 +31,19 @@ public class SimulationGui {
         MapGui mapGui = new MapGui(map, engine, images);
         mapGui.init();
         ToggleButton pauseButton = createPauseButton(engine, "pause");
+        ToggleButton topGenomeButton = createTopGenomeButton(mapGui, "mark top genome");
+        HBox buttonsBox = new HBox();
+        buttonsBox.getChildren().addAll(pauseButton, topGenomeButton);
 
         VBox mapBox = new VBox();
-        mapBox.getChildren().addAll(mapGui.getParent(), pauseButton);
+        mapBox.getChildren().addAll(mapGui.getParent(), buttonsBox);
 
         rootBox = new HBox();
         StatisticsGui statisticsGui = new StatisticsGui(engine);
 
         rootBox.getChildren().addAll(mapBox, statisticsGui.getRoot());
     }
+
 
     public void start(){
         Thread engineThread = new Thread((Runnable) engine);
@@ -61,5 +66,19 @@ public class SimulationGui {
             }
         });
         return pauseButton;
+    }
+
+    private ToggleButton createTopGenomeButton(MapGui mapGui, String text) {
+        ToggleButton topGenomeButton = new ToggleButton(text);
+        ToggleGroup group = new ToggleGroup();
+        topGenomeButton.setToggleGroup(group);
+        group.selectedToggleProperty().addListener((ov, toggle, new_toggle) -> {
+            if (new_toggle != null) {
+                mapGui.setMarkGenome(true);
+            } else {
+                mapGui.setMarkGenome(false);
+            }
+        });
+        return topGenomeButton;
     }
 }

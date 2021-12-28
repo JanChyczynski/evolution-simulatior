@@ -144,7 +144,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
         return deadAnimals.stream().mapToInt(a -> a.getDeathDay() - a.getBirthDay()).average().orElse(0);
     }
 
-    private Genome getTopGenome() {
+    public Genome getTopGenome() {
         if(animals.isEmpty())
         {
             return new Genome();

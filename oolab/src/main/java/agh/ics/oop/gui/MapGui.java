@@ -20,11 +20,16 @@ public class MapGui implements IPositionChangeObserver {
     private final AbstractWorldMap map;
     private final GridPane grid;
     private final ImageLoader images;
+    private final SimulationEngine engine;
+    private boolean markGenome;
+    private Genome markedGenome;
 
-    public MapGui(AbstractWorldMap map, IEngine engine, ImageLoader images) {
+    public MapGui(AbstractWorldMap map, SimulationEngine engine, ImageLoader images) {
         this.map = map;
         fullEnergy = 100;
         this.images = images;
+        this.engine = engine;
+        markGenome = false;
 
         grid = new GridPane();
         grid.setGridLinesVisible(true);
@@ -43,6 +48,9 @@ public class MapGui implements IPositionChangeObserver {
     }
 
     public void showMap(Vector2d origin) {
+        if(markGenome){
+            markedGenome = engine.getTopGenome();
+        }
         for (int i = map.bottomLeftCorner().x(); i <= map.upperRightCorner().x(); i++) {
             for (int j = map.bottomLeftCorner().y(); j <= map.upperRightCorner().y(); j++) {
                 try {
@@ -82,9 +90,21 @@ public class MapGui implements IPositionChangeObserver {
         imageView.setFitHeight(CELL_HEIGHT);
         expressEnergy(element, imageView);
         imageView.setRotate(360/MapDirection.values().length * element.getOrientation().toInt());
+        expressMarkedGene(element, imageView);
 
         grid.add(imageView, i, j, 1, 1);
         GridPane.setHalignment(imageView, HPos.CENTER);
+    }
+
+    private void expressMarkedGene(IMapElement element, ImageView imageView) {
+        if(markGenome &&
+                map.objectAt(element.getPosition()).stream().anyMatch(el ->
+                        el instanceof Animal && ((Animal) el).getGenome().equals(markedGenome)))
+        {
+            ColorAdjust markedHue = new ColorAdjust();
+            markedHue.setHue(2);
+            imageView.setEffect(markedHue);
+        }
     }
 
     private void expressEnergy(IMapElement element, ImageView imageView) {
@@ -114,5 +134,11 @@ public class MapGui implements IPositionChangeObserver {
 
     public void setFullEnergy(int fullEnergy) {
         this.fullEnergy = fullEnergy;
+    }
+
+    public void setMarkGenome(boolean markGenome) {
+        this.markGenome = markGenome;
+        System.out.println(this.markGenome);
+        this.showMap(new Vector2d(1,1));
     }
 }

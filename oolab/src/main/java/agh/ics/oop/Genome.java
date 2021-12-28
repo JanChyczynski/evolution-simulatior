@@ -3,10 +3,7 @@ package agh.ics.oop;
 import agh.ics.oop.MapDirection;
 import agh.ics.oop.gui.Randomizer;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -65,5 +62,18 @@ public class Genome {
                 .replace("[", "")
                 .replace("]", "")
                 .trim();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Genome genome = (Genome) o;
+        return Objects.equals(genes, genome.genes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(genes);
     }
 }
