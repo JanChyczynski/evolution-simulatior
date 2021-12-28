@@ -14,8 +14,8 @@ import javafx.scene.layout.RowConstraints;
 import java.util.NoSuchElementException;
 
 public class MapGui implements IPositionChangeObserver {
-    public static final int CELL_WIDTH  = 55;
-    public static final int CELL_HEIGHT = 55;
+    public static final int CELL_WIDTH  = 40;
+    public static final int CELL_HEIGHT = 40;
     private int fullEnergy;
     private final AbstractWorldMap map;
     private final GridPane grid;

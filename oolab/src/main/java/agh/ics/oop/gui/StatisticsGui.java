@@ -10,6 +10,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class StatisticsGui implements IStatisticsObserver {
@@ -68,7 +69,7 @@ public class StatisticsGui implements IStatisticsObserver {
                                     genomeBox);
     }
 
-    public VBox getRootBox() {
+    public Pane getRoot() {
         return rootBox;
     }
 
