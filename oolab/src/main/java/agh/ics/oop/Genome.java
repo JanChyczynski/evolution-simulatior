@@ -59,4 +59,11 @@ public class Genome {
         Collections.sort(genes);
     }
 
+    @Override
+    public String toString() {
+        return genes.toString().replace(",", "")
+                .replace("[", "")
+                .replace("]", "")
+                .trim();
+    }
 }

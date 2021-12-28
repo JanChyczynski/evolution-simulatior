@@ -7,8 +7,11 @@ public class Animal implements IMapElement, IPositionChangePublisher {
     private MapDirection orientation;
     private Vector2d position;
     private final IWorldMap map;
-    private Genome genom;
+    private Genome genome;
     private int energy;
+    private int childrenNumber;
+    private int birthDay;
+    private int deathDay;
 
     static final int BIRTH_ENERGY_RATIO = 4;
 
@@ -16,7 +19,7 @@ public class Animal implements IMapElement, IPositionChangePublisher {
 
     public Animal(IWorldMap map, Vector2d initialPosition, int energy, Genome genome) {
         this(map, initialPosition, energy);
-        this.genom = genome;
+        this.genome = genome;
     }
 
     public Animal(IWorldMap map, Vector2d initialPosition, int energy) {
@@ -27,8 +30,9 @@ public class Animal implements IMapElement, IPositionChangePublisher {
     public Animal(IWorldMap map, Vector2d initialPosition) {
         this.map = map;
         position = initialPosition;
-        genom = new Genome();
-        orientation = MapDirection.fromInt(genom.getRandomGene());
+        genome = new Genome();
+        childrenNumber = 0;
+        orientation = MapDirection.fromInt(genome.getRandomGene());
 
         observers = new HashSet<>();
         this.map.place(this);
@@ -68,7 +72,7 @@ public class Animal implements IMapElement, IPositionChangePublisher {
     }
 
     public void move(){
-        move(MoveDirection.fromInt(genom.getRandomGene()));
+        move(MoveDirection.fromInt(genome.getRandomGene()));
     }
 
     public void move(MoveDirection direction){
@@ -91,12 +95,12 @@ public class Animal implements IMapElement, IPositionChangePublisher {
     }
 
     @Override
-    public void addObserver(IPositionChangeObserver observer){
+    public void addPositionObserver(IPositionChangeObserver observer){
         observers.add(observer);
     }
 
     @Override
-    public void removeObserver(IPositionChangeObserver observer){
+    public void removePositionObserver(IPositionChangeObserver observer){
         observers.remove(observer);
     }
 
@@ -120,10 +124,42 @@ public class Animal implements IMapElement, IPositionChangePublisher {
     public boolean isHorny() { return true; }
 
     public Animal makeLove(Animal lover) {
-        Genome newGenome = genom.combined(lover.genom, Genome.SIZE*lover.getEnergy()/getEnergy());
+        Genome newGenome = genome.combined(lover.genome, Genome.SIZE*lover.getEnergy()/getEnergy());
         setEnergy(getEnergy() - getEnergy()/BIRTH_ENERGY_RATIO);
         lover.setEnergy(lover.getEnergy() - lover.getEnergy()/lover.BIRTH_ENERGY_RATIO);
+        childrenNumber++;
+        lover.setChildrenNumber(lover.getChildrenNumber()+1);
         return new Animal(map, getPosition(), getEnergy()/BIRTH_ENERGY_RATIO + lover.getEnergy()/BIRTH_ENERGY_RATIO, newGenome);
+    }
+
+
+    public int getChildrenNumber() {
+        return childrenNumber;
+    }
+
+    private void setChildrenNumber(int i) {
+        childrenNumber = i;
+    }
+
+
+    public int getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(int birthDay) {
+        this.birthDay = birthDay;
+    }
+
+    public int getDeathDay() {
+        return deathDay;
+    }
+
+    public void setDeathDay(int deathDay) {
+        this.deathDay = deathDay;
+    }
+
+    public Genome getGenome() {
+        return genome;
     }
 
     @Override

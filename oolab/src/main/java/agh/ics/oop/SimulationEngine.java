@@ -1,28 +1,32 @@
 package agh.ics.oop;
 
-import javafx.collections.transformation.SortedList;
-
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
 public class SimulationEngine implements IEngine, IPositionChangeObserver, Runnable {
     private final SteppeJungleMap worldMap;
     private final Set<Animal> animals;
-    private final Set<IPositionChangeObserver> observers;
+    private final Set<Animal> deadAnimals;
+    private final Set<IPositionChangeObserver> positionObservers;
+    private final Set<IStatisticsObserver> statisticsObservers;
     public final int moveDelay;
     private final int startEnergy, moveEnergy, loveMinEnergy;
-
+    private int day;
     public SimulationEngine(SteppeJungleMap worldMap, int initialPopulation,
                             int startEnergy, int moveEnergy) {
-        observers = new HashSet<>();
+        positionObservers = new HashSet<>();
+        statisticsObservers = new HashSet<>();
         this.worldMap = worldMap;
         this.startEnergy = startEnergy;
         this.moveEnergy = moveEnergy;
         loveMinEnergy = startEnergy/2;
         moveDelay = 300;
+        day = 0;
 
         animals = new HashSet<>();
+        deadAnimals = new HashSet<>();
         createAnimals(initialPopulation);
     }
 
@@ -37,18 +41,22 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
         }
         for(Animal animal : animals)
         {
-            animal.addObserver(this);
+            animal.addPositionObserver(this);
+            animal.setBirthDay(day);
         }
     }
 
     @Override
     public void run() {
-        while(true) {
+        for(day = 0;true; day++) {
             for (Iterator<Animal> iterator = animals.iterator(); iterator.hasNext(); ) {
                 Animal animal = iterator.next();
                 if (animal.getEnergy() <= 0) {
                     worldMap.remove(animal);
+                    deadAnimals.add(animal);
+                    animal.setDeathDay(day);
                     iterator.remove();
+                    continue;
                 }
                 animal.move();
                 animal.setEnergy(animal.getEnergy() - moveEnergy);
@@ -56,6 +64,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
             handleEating();
             handleReproduction();
             worldMap.growGrass();
+            updateStatistics();
             try{
                 Thread.sleep(moveDelay);
             } catch (InterruptedException e) {
@@ -92,31 +101,70 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
                    lovers.get(0).getEnergy() >= loveMinEnergy ) {
                     Animal child = ((Animal) lovers.get(0)).makeLove((Animal) lovers.get(1));
                     animals.add(child);
-                    child.addObserver(this);
+                    child.setBirthDay(day);
+                    child.addPositionObserver(this);
                 }
 
             }
         }
     }
 
-    @Override
-    public void addObserver(IPositionChangeObserver observer){
-        observers.add(observer);
+    private void updateStatistics() {
+        statisticsObservers.forEach(observer -> observer.statisticsChanged(day, animals.size(),
+                worldMap.getPlantsNumber(), getAverageEnergy(), getAverageLifespan(), getAverageChildrenNumber(), getTopGenome()));
+//        void statisticsChanged(int animalsNumber, int plantsNumber, int averageEnergy, int averageLifespan, int averageChildrenNumber, Genome genomeMode);
+    }
+
+    private double getAverageEnergy() {
+        return animals.stream().mapToInt(Animal::getEnergy).average().orElse(0);
+    }
+
+    private double getAverageChildrenNumber() {
+        return animals.stream().mapToInt(Animal::getChildrenNumber).average().orElse(0);
+    }
+
+    private double getAverageLifespan() {
+        return deadAnimals.stream().mapToInt(a -> a.getDeathDay() - a.getBirthDay()).average().orElse(0);
+    }
+
+    private Genome getTopGenome() {
+        if(animals.isEmpty())
+        {
+            return new Genome();
+        }
+        return animals.stream()
+                .collect(Collectors.groupingBy(Animal::getGenome, Collectors.counting()))
+                .entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue()).get().getKey();
+    }
+
+    public void addStatisticsObserver(IStatisticsObserver observer){
+        statisticsObservers.add(observer);
+    }
+
+    public void removeStatisticsObserver(IStatisticsObserver observer){
+        statisticsObservers.remove(observer);
     }
 
     @Override
-    public void removeObserver(IPositionChangeObserver observer){
-        observers.remove(observer);
+    public void addPositionObserver(IPositionChangeObserver observer){
+        positionObservers.add(observer);
     }
 
-    private void notifyAllObservers(Vector2d newPosition, Vector2d oldPosition, IMapElement movedElement) {
-        for(IPositionChangeObserver observer : observers){
+    @Override
+    public void removePositionObserver(IPositionChangeObserver observer){
+        positionObservers.remove(observer);
+    }
+
+    private void notifyAllPositionObservers(Vector2d newPosition, Vector2d oldPosition, IMapElement movedElement) {
+        for(IPositionChangeObserver observer : positionObservers){
             observer.positionChanged(oldPosition, newPosition, movedElement);
         }
     }
 
     @Override
     public void positionChanged(Vector2d start, Vector2d end, IMapElement movedElement) {
-        notifyAllObservers(start, end, movedElement);
+        notifyAllPositionObservers(start, end, movedElement);
     }
 }

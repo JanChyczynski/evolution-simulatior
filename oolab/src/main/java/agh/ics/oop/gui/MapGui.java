@@ -11,13 +11,11 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.NoSuchElementException;
 
 public class MapGui implements IPositionChangeObserver {
-    public static final int CELL_WIDTH  = 60;
-    public static final int CELL_HEIGHT = 60;
+    public static final int CELL_WIDTH  = 55;
+    public static final int CELL_HEIGHT = 55;
     private int fullEnergy;
     private final AbstractWorldMap map;
     private final GridPane grid;
@@ -30,7 +28,7 @@ public class MapGui implements IPositionChangeObserver {
 
         grid = new GridPane();
         grid.setGridLinesVisible(true);
-        engine.addObserver(this);
+        engine.addPositionObserver(this);
 
         setCellSize(CELL_WIDTH, CELL_HEIGHT);
     }

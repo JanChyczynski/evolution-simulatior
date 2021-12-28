@@ -11,11 +11,13 @@ public class SteppeJungleMap extends AbstractWorldMap{
     private int jungleHeight, jungleWidth;
     private final int grassEnergy;
     private Vector2d jungleBottomLeftCorner, jungleUpperRightCorner;
+    private int plantsNumber;
 
     public SteppeJungleMap(int height, int width, int jungleRatio, int grassEnergy) {
         this.height = height;
         this.width = width;
         this.grassEnergy = grassEnergy;
+        this.plantsNumber = 0;
         createJungle(jungleRatio);
     }
 
@@ -40,11 +42,13 @@ public class SteppeJungleMap extends AbstractWorldMap{
         if(!isNull(position))
         {
             addToMap(new Grass(position, grassEnergy));
+            plantsNumber++;
         }
         position = getRandomPositionSatisfying((p) -> !isOccupied(p), jungleBottomLeftCorner, jungleUpperRightCorner);
         if(!isNull(position))
         {
             addToMap(new Grass(position, grassEnergy));
+            plantsNumber++;
         }
     }
 
@@ -89,5 +93,19 @@ public class SteppeJungleMap extends AbstractWorldMap{
     @Override
     public Vector2d upperRightCorner(){
         return new Vector2d(width, height);
+    }
+
+    @Override
+    public void remove(IMapElement element){
+        if(element instanceof  Grass){
+            plantsNumber--;
+        }
+        super.remove(element);
+    }
+
+
+
+    public int getPlantsNumber() {
+        return plantsNumber;
     }
 }

@@ -4,13 +4,18 @@ import agh.ics.oop.*;
 import javafx.application.Application;
 
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 
 public class App extends Application {
 
     private SteppeJungleMap map;
-    private IEngine engine;
+    private SimulationEngine engine;
     private ImageLoader images;
 
     @Override
@@ -31,7 +36,15 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         MapGui mapGui = new MapGui(map, engine, images);
         mapGui.init();
-        Scene scene = new Scene(mapGui.getParent(), 1000, 1000);
+        Button button = new Button("not yet");
+        VBox mapBox = new VBox();
+        mapBox.getChildren().addAll(mapGui.getParent(), button);
+
+        HBox rootBox = new HBox();
+        StatisticsGui statisticsGui = new StatisticsGui(engine);
+
+        rootBox.getChildren().addAll(mapBox, statisticsGui.getRootBox());
+        Scene scene = new Scene(rootBox, 1400, 1000);
         primaryStage.setScene(scene);
         primaryStage.show();
 
