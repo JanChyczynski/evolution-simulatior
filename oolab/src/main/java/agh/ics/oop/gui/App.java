@@ -61,7 +61,7 @@ public class App extends Application {
         NamedIntField widthField = new NamedIntField(15, "Width:");
         NamedIntField jungleRatioField = new NamedIntField(2, "Jungle ratio:");
         NamedIntField grassEnergyField = new NamedIntField(40, "Grass energy:");
-        NamedIntField initialPopulationField = new NamedIntField(12, "Initial population:");
+        NamedIntField initialPopulationField = new NamedIntField(20, "Initial population:");
         NamedIntField startEnergyField = new NamedIntField(50, "Start energy:");
         NamedIntField moveEnergyField = new NamedIntField(1, "Move energy:");
 

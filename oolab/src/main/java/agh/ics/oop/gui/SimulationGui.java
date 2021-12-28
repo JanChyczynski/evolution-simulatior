@@ -4,7 +4,6 @@ import agh.ics.oop.IPausable;
 import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.SimulationParameters;
 import agh.ics.oop.SteppeJungleMap;
-import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
@@ -36,7 +35,7 @@ public class SimulationGui {
         buttonsBox.getChildren().addAll(pauseButton, topGenomeButton);
 
         VBox mapBox = new VBox();
-        mapBox.getChildren().addAll(mapGui.getParent(), buttonsBox);
+        mapBox.getChildren().addAll(mapGui.getRoot(), buttonsBox);
 
         rootBox = new HBox();
         StatisticsGui statisticsGui = new StatisticsGui(engine);

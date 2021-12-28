@@ -3,13 +3,13 @@ package agh.ics.oop.gui;
 import agh.ics.oop.*;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 
 import java.util.NoSuchElementException;
 
@@ -23,6 +23,8 @@ public class MapGui implements IPositionChangeObserver {
     private final SimulationEngine engine;
     private boolean markGenome;
     private Genome markedGenome;
+    private TrackerGui tracker;
+    private final VBox root;
 
     public MapGui(AbstractWorldMap map, SimulationEngine engine, ImageLoader images) {
         this.map = map;
@@ -30,11 +32,14 @@ public class MapGui implements IPositionChangeObserver {
         this.images = images;
         this.engine = engine;
         markGenome = false;
+        tracker = new TrackerGui();
 
         grid = new GridPane();
         grid.setGridLinesVisible(true);
-        engine.addPositionObserver(this);
+        root = new VBox();
+        root.getChildren().addAll(grid, tracker.getRoot());
 
+        engine.addPositionObserver(this);
         setCellSize(CELL_WIDTH, CELL_HEIGHT);
     }
 
@@ -43,11 +48,12 @@ public class MapGui implements IPositionChangeObserver {
        showMap(new Vector2d(1, 1));
     }
 
-    public javafx.scene.Parent getParent(){
-        return grid;
+    public Pane getRoot(){
+        return root;
     }
 
     public void showMap(Vector2d origin) {
+        tracker.refresh();
         if(markGenome){
             markedGenome = engine.getTopGenome();
         }
@@ -91,9 +97,18 @@ public class MapGui implements IPositionChangeObserver {
         expressEnergy(element, imageView);
         imageView.setRotate(360/MapDirection.values().length * element.getOrientation().toInt());
         expressMarkedGene(element, imageView);
+        Button button = new Button();
+        button.setGraphic(imageView);
+        button.setBackground(null);
+        if(element instanceof ITrackable){
+            button.setOnAction(event -> {
+                tracker.track((ITrackable) element, engine.getDay());
 
-        grid.add(imageView, i, j, 1, 1);
-        GridPane.setHalignment(imageView, HPos.CENTER);
+            });
+        }
+
+        grid.add(button, i, j, 1, 1);
+        GridPane.setHalignment(button, HPos.CENTER);
     }
 
     private void expressMarkedGene(IMapElement element, ImageView imageView) {
@@ -101,7 +116,9 @@ public class MapGui implements IPositionChangeObserver {
                 map.objectAt(element.getPosition()).stream().anyMatch(el ->
                         el instanceof Animal && ((Animal) el).getGenome().equals(markedGenome)))
         {
-            ColorAdjust markedHue = new ColorAdjust();
+            ColorAdjust markedHue = imageView.getEffect() instanceof ColorAdjust?
+                    (ColorAdjust) imageView.getEffect() :
+                    new ColorAdjust();
             markedHue.setHue(2);
             imageView.setEffect(markedHue);
         }
@@ -138,7 +155,6 @@ public class MapGui implements IPositionChangeObserver {
 
     public void setMarkGenome(boolean markGenome) {
         this.markGenome = markGenome;
-        System.out.println(this.markGenome);
         this.showMap(new Vector2d(1,1));
     }
 }

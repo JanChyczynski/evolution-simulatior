@@ -129,7 +129,6 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
     private void updateStatistics() {
         statisticsObservers.forEach(observer -> observer.statisticsChanged(day, animals.size(),
                 worldMap.getPlantsNumber(), getAverageEnergy(), getAverageLifespan(), getAverageChildrenNumber(), getTopGenome()));
-//        void statisticsChanged(int animalsNumber, int plantsNumber, int averageEnergy, int averageLifespan, int averageChildrenNumber, Genome genomeMode);
     }
 
     private double getAverageEnergy() {
@@ -141,10 +140,10 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
     }
 
     private double getAverageLifespan() {
-        return deadAnimals.stream().mapToInt(a -> a.getDeathDay() - a.getBirthDay()).average().orElse(0);
+        return deadAnimals.stream().mapToInt(a -> a.getDeathDay().getAsInt() - a.getBirthDay()).average().orElse(0);
     }
 
-    public Genome getTopGenome() {
+    public synchronized Genome getTopGenome() {
         if(animals.isEmpty())
         {
             return new Genome();
@@ -201,6 +200,10 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
         synchronized (this){
             this.notify();
         }
+    }
+
+    public int getDay() {
+        return day;
     }
 
 }

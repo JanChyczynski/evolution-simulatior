@@ -1,18 +1,18 @@
 package agh.ics.oop;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class Animal implements IMapElement, IPositionChangePublisher {
+public class Animal implements IMapElement, IPositionChangePublisher, ITrackable {
     private MapDirection orientation;
     private Vector2d position;
     private final IWorldMap map;
     private Genome genome;
     private int energy;
-    private int childrenNumber;
     private int birthDay;
-    private int deathDay;
-
+    private OptionalInt deathDay;
+    private final List<Animal> children;
+    public boolean visited;
     static final int BIRTH_ENERGY_RATIO = 4;
 
     private final Set<IPositionChangeObserver> observers;
@@ -31,8 +31,10 @@ public class Animal implements IMapElement, IPositionChangePublisher {
         this.map = map;
         position = initialPosition;
         genome = new Genome();
-        childrenNumber = 0;
         orientation = MapDirection.fromInt(genome.getRandomGene());
+        deathDay = OptionalInt.empty();
+        children = new ArrayList<>();
+        visited = false;
 
         observers = new HashSet<>();
         this.map.place(this);
@@ -127,20 +129,23 @@ public class Animal implements IMapElement, IPositionChangePublisher {
         Genome newGenome = genome.combined(lover.genome, Genome.SIZE*lover.getEnergy()/getEnergy());
         setEnergy(getEnergy() - getEnergy()/BIRTH_ENERGY_RATIO);
         lover.setEnergy(lover.getEnergy() - lover.getEnergy()/lover.BIRTH_ENERGY_RATIO);
-        childrenNumber++;
-        lover.setChildrenNumber(lover.getChildrenNumber()+1);
-        return new Animal(map, getPosition(), getEnergy()/BIRTH_ENERGY_RATIO + lover.getEnergy()/BIRTH_ENERGY_RATIO, newGenome);
+        Animal child = new Animal(map, getPosition(),
+                getEnergy()/BIRTH_ENERGY_RATIO + lover.getEnergy()/BIRTH_ENERGY_RATIO, newGenome);
+        addChild(child);
+        lover.addChild(child);
+        return child;
     }
 
+    public void addChild(Animal child){
+        synchronized (children)
+        {
+            children.add(child);
+        }
+    }
 
     public int getChildrenNumber() {
-        return childrenNumber;
+        return children.size();
     }
-
-    private void setChildrenNumber(int i) {
-        childrenNumber = i;
-    }
-
 
     public int getBirthDay() {
         return birthDay;
@@ -150,16 +155,46 @@ public class Animal implements IMapElement, IPositionChangePublisher {
         this.birthDay = birthDay;
     }
 
-    public int getDeathDay() {
+    public OptionalInt getDeathDay() {
         return deathDay;
     }
 
     public void setDeathDay(int deathDay) {
+        setDeathDay(OptionalInt.of(deathDay));
+    }
+    public void setDeathDay(OptionalInt deathDay) {
         this.deathDay = deathDay;
     }
 
     public Genome getGenome() {
         return genome;
+    }
+
+
+    @Override
+    public int getNewChildrenNumber(int startDay) {
+        synchronized (children)
+        {
+            return ((int) children.stream().filter(a -> a.getBirthDay() >= startDay).count());
+        }
+    }
+
+    @Override
+    public int getNewAncestorsNumber(int startDay) {
+        return getNewAncestorsSet(startDay).size();
+    }
+
+    public HashSet<Animal> getNewAncestorsSet(int startDay){
+        synchronized (children){
+            HashSet<Animal> set = (HashSet<Animal>) children.stream().filter(a -> a.getBirthDay() >= startDay).collect(Collectors.toSet());
+            for (Animal child : children) {
+                if (child.getBirthDay() >= startDay) {
+                    HashSet<Animal> childAncestors = child.getNewAncestorsSet(startDay);
+                    set.addAll(childAncestors);
+                }
+            }
+           return set;
+        }
     }
 
     @Override
