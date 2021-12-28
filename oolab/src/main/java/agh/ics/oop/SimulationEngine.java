@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
-public class SimulationEngine implements IEngine, IPositionChangeObserver, Runnable {
+public class SimulationEngine implements IEngine, IPositionChangeObserver, Runnable, IPausable {
     private final SteppeJungleMap worldMap;
     private final Set<Animal> animals;
     private final Set<Animal> deadAnimals;
@@ -14,6 +14,8 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
     public final int moveDelay;
     private final int startEnergy, moveEnergy, loveMinEnergy;
     private int day;
+    private boolean paused;
+
     public SimulationEngine(SteppeJungleMap worldMap, int initialPopulation,
                             int startEnergy, int moveEnergy) {
         positionObservers = new HashSet<>();
@@ -24,6 +26,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
         loveMinEnergy = startEnergy/2;
         moveDelay = 300;
         day = 0;
+        paused = false;
 
         animals = new HashSet<>();
         deadAnimals = new HashSet<>();
@@ -70,6 +73,16 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 System.out.println(e.getMessage());
+            }
+            while(isPaused()){
+                synchronized (this){
+
+                try {
+                    this.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                }
             }
         }
     }
@@ -167,4 +180,23 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
     public void positionChanged(Vector2d start, Vector2d end, IMapElement movedElement) {
         notifyAllPositionObservers(start, end, movedElement);
     }
+
+    @Override
+    public boolean isPaused() {
+        return paused;
+    }
+
+    @Override
+    public void pause() {
+        this.paused = true;
+    }
+
+    @Override
+    public void resume(){
+        paused = false;
+        synchronized (this){
+            this.notify();
+        }
+    }
+
 }
