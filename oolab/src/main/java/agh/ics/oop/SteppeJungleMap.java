@@ -13,6 +13,10 @@ public class SteppeJungleMap extends AbstractWorldMap{
     private Vector2d jungleBottomLeftCorner, jungleUpperRightCorner;
     private int plantsNumber;
 
+    public SteppeJungleMap(SimulationParameters params){
+        this(params.height(), params.width(), params.jungleRatio(), params.grassEnergy());
+    }
+
     public SteppeJungleMap(int height, int width, int jungleRatio, int grassEnergy) {
         this.height = height;
         this.width = width;

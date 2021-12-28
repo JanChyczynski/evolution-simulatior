@@ -16,6 +16,10 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
     private int day;
     private boolean paused;
 
+    public SimulationEngine(SteppeJungleMap worldMap, SimulationParameters params){
+        this(worldMap, params.initialPopulation(), params.startEnergy(), params.moveEnergy());
+    }
+
     public SimulationEngine(SteppeJungleMap worldMap, int initialPopulation,
                             int startEnergy, int moveEnergy) {
         positionObservers = new HashSet<>();

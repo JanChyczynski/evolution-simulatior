@@ -2,6 +2,7 @@ package agh.ics.oop.gui;
 
 import agh.ics.oop.IPausable;
 import agh.ics.oop.SimulationEngine;
+import agh.ics.oop.SimulationParameters;
 import agh.ics.oop.SteppeJungleMap;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -15,12 +16,11 @@ public class SimulationGui {
     private ImageLoader images;
     private Pane rootBox;
 
-    public SimulationGui(ImageLoader images, int height, int width, int jungleRatio, int grassEnergy, int initialPopulation,
-                         int startEnergy, int moveEnergy) {
+    public SimulationGui(ImageLoader images, SimulationParameters params) {
         this.images = images;
         try {
-            map = new SteppeJungleMap(height, width, jungleRatio, grassEnergy);
-            engine = new SimulationEngine(map, initialPopulation, startEnergy, moveEnergy);
+            map = new SteppeJungleMap(params);
+            engine = new SimulationEngine(map, params);
             System.out.println(map);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
