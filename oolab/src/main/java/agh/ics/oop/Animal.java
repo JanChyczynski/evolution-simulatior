@@ -190,7 +190,15 @@ public class Animal implements IMapElement, IPositionChangePublisher, ITrackable
             for (Animal child : children) {
                 if (child.getBirthDay() >= startDay) {
                     HashSet<Animal> childAncestors = child.getNewAncestorsSet(startDay);
-                    set.addAll(childAncestors);
+                    if(set.size() >= childAncestors.size()) //merging smaller set into bigger for better complexity
+                    {
+                        set.addAll(childAncestors);
+                    }
+                    else
+                    {
+                        childAncestors.addAll(set);
+                        set = childAncestors;
+                    }
                 }
             }
            return set;

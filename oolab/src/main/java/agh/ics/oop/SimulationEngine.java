@@ -115,7 +115,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
                     throw new IllegalStateException("MapElementSet returned couple which size is not 2");
                 }
                 if(lovers.get(0).getEnergy() >= loveMinEnergy &&
-                   lovers.get(0).getEnergy() >= loveMinEnergy ) {
+                   lovers.get(1).getEnergy() >= loveMinEnergy ) {
                     Animal child = ((Animal) lovers.get(0)).makeLove((Animal) lovers.get(1));
                     animals.add(child);
                     child.setBirthDay(day);
