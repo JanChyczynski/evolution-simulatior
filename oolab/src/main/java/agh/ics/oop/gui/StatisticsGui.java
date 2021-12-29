@@ -1,9 +1,6 @@
 package agh.ics.oop.gui;
 
-import agh.ics.oop.Genome;
-import agh.ics.oop.IStatisticsObserver;
-import agh.ics.oop.SimulationEngine;
-import agh.ics.oop.Vector2d;
+import agh.ics.oop.*;
 import javafx.application.Platform;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -22,7 +19,6 @@ public class StatisticsGui implements IStatisticsObserver {
     private XYChart.Series averageEnergySeries;
     private XYChart.Series averageLifespanSeries;
     private XYChart.Series averageChildrenNumberSeries;
-    private Genome genomeMode;
     private Label genomeLabel;
     private HBox genomeBox;
 
@@ -74,15 +70,15 @@ public class StatisticsGui implements IStatisticsObserver {
     }
 
     @Override
-    public void statisticsChanged(int day, int animalsNumber, int plantsNumber, double averageEnergy, double averageLifespan, double averageChildrenNumber, Genome genomeMode) {
+    public void statisticsChanged(StatisticsEntry entry) {
         Platform.runLater(() -> {
-            animalsNumberSeries.getData().add(new XYChart.Data(day, animalsNumber));
-            plantsNumberSeries.getData().add(new XYChart.Data(day, plantsNumber));
-            averageEnergySeries.getData().add(new XYChart.Data(day, averageEnergy));
-            averageLifespanSeries.getData().add(new XYChart.Data(day, averageLifespan));
-            averageChildrenNumberSeries.getData().add(new XYChart.Data(day, averageChildrenNumber));
+            animalsNumberSeries.getData().add(new XYChart.Data(entry.day(), entry.animalsNumber()));
+            plantsNumberSeries.getData().add(new XYChart.Data(entry.day(), entry.plantsNumber()));
+            averageEnergySeries.getData().add(new XYChart.Data(entry.day(), entry.averageEnergy()));
+            averageLifespanSeries.getData().add(new XYChart.Data(entry.day(), entry.averageLifespan()));
+            averageChildrenNumberSeries.getData().add(new XYChart.Data(entry.day(), entry.averageChildrenNumber()));
             genomeBox.getChildren().clear();
-            genomeBox.getChildren().addAll(genomeLabel, new Label(genomeMode.toString()));
+            genomeBox.getChildren().addAll(genomeLabel, new Label(entry.genomeMode().toString()));
         });
     }
 }

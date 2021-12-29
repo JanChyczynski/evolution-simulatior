@@ -127,8 +127,8 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
     }
 
     private void updateStatistics() {
-        statisticsObservers.forEach(observer -> observer.statisticsChanged(day, animals.size(),
-                worldMap.getPlantsNumber(), getAverageEnergy(), getAverageLifespan(), getAverageChildrenNumber(), getTopGenome()));
+        statisticsObservers.forEach(observer -> observer.statisticsChanged(new StatisticsEntry(day, animals.size(),
+                worldMap.getPlantsNumber(), getAverageEnergy(), getAverageLifespan(), getAverageChildrenNumber(), getTopGenome())));
     }
 
     private double getAverageEnergy() {
