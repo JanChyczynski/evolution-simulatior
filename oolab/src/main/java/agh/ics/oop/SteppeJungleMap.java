@@ -1,7 +1,5 @@
 package agh.ics.oop;
 
-import agh.ics.oop.gui.Randomizer;
-
 import java.util.function.Function;
 
 import static java.util.Objects.isNull;

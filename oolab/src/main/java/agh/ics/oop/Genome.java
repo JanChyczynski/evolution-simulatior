@@ -1,8 +1,5 @@
 package agh.ics.oop;
 
-import agh.ics.oop.MapDirection;
-import agh.ics.oop.gui.Randomizer;
-
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
