@@ -11,24 +11,24 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
     private final Set<Animal> deadAnimals;
     private final Set<IPositionChangeObserver> positionObservers;
     private final Set<IStatisticsObserver> statisticsObservers;
-    public final int moveDelay;
+    public final int dayDelay;
     private final int startEnergy, moveEnergy, loveMinEnergy;
     private int day;
     private boolean paused;
 
     public SimulationEngine(SteppeJungleMap worldMap, SimulationParameters params){
-        this(worldMap, params.initialPopulation(), params.startEnergy(), params.moveEnergy());
+        this(worldMap, params.initialPopulation(), params.startEnergy(), params.moveEnergy(), params.delay());
     }
 
     public SimulationEngine(SteppeJungleMap worldMap, int initialPopulation,
-                            int startEnergy, int moveEnergy) {
+                            int startEnergy, int moveEnergy, int dayDelay) {
         positionObservers = new HashSet<>();
         statisticsObservers = new HashSet<>();
         this.worldMap = worldMap;
         this.startEnergy = startEnergy;
         this.moveEnergy = moveEnergy;
         loveMinEnergy = startEnergy/2;
-        moveDelay = 300;
+        this.dayDelay = dayDelay;
         day = 0;
         paused = false;
 
@@ -73,7 +73,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
             worldMap.growGrass();
             updateStatistics();
             try{
-                Thread.sleep(moveDelay);
+                Thread.sleep(dayDelay);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 System.out.println(e.getMessage());

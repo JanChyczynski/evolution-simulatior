@@ -64,6 +64,7 @@ public class App extends Application {
         NamedIntField initialPopulationField = new NamedIntField(20, "Initial population:");
         NamedIntField startEnergyField = new NamedIntField(50, "Start energy:");
         NamedIntField moveEnergyField = new NamedIntField(1, "Move energy:");
+        NamedIntField delayField = new NamedIntField(300, "Day duration (ms):");
 
         Button goButton = new Button("GO!");
         goButton.setOnAction(event -> {
@@ -77,7 +78,7 @@ public class App extends Application {
 
         rootBox.getChildren().addAll(title, heightField.getRoot(), widthField.getRoot(), jungleRatioField.getRoot(),
                 grassEnergyField.getRoot(), initialPopulationField.getRoot(),
-                startEnergyField.getRoot(), moveEnergyField.getRoot(),
+                startEnergyField.getRoot(), moveEnergyField.getRoot(), delayField.getRoot(),
                 goButton);
 
         rootBox.setAlignment(Pos.CENTER);
@@ -101,6 +102,6 @@ public class App extends Application {
         }
         return new SimulationParameters(heightField.getValue(), widthField.getValue(), jungleRatioField.getValue(),
                 grassEnergyField.getValue(), initialPopulationField.getValue(),
-                startEnergyField.getValue(), moveEnergyField.getValue());
+                startEnergyField.getValue(), moveEnergyField.getValue(), delayField.getValue());
     }
 }

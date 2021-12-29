@@ -10,12 +10,17 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.util.Duration;
 
+import java.time.Clock;
 import java.util.NoSuchElementException;
+
+import static javafx.util.Duration.millis;
 
 public class MapGui implements IPositionChangeObserver {
     public static final int CELL_WIDTH  = 40;
     public static final int CELL_HEIGHT = 40;
+    private static final long MIN_REFRESH_DELAY = 30;
     private int fullEnergy;
     private final AbstractWorldMap map;
     private final GridPane grid;
@@ -25,6 +30,7 @@ public class MapGui implements IPositionChangeObserver {
     private Genome markedGenome;
     private TrackerGui tracker;
     private final VBox root;
+    private long lastRefresh;
 
     public MapGui(AbstractWorldMap map, SimulationEngine engine, ImageLoader images) {
         this.map = map;
@@ -33,6 +39,7 @@ public class MapGui implements IPositionChangeObserver {
         this.engine = engine;
         markGenome = false;
         tracker = new TrackerGui();
+        lastRefresh = Clock.systemDefaultZone().millis();
 
         grid = new GridPane();
         grid.setGridLinesVisible(true);
@@ -138,11 +145,14 @@ public class MapGui implements IPositionChangeObserver {
 
     @Override
     public void positionChanged(Vector2d start, Vector2d end, IMapElement movedElement) {
-        Platform.runLater(() -> {
-            grid.getChildren().clear();
-            showColumnsAndRowsLabels();
-            showMap(new Vector2d(1, 1));
-        });
+        if(Clock.systemDefaultZone().millis()-lastRefresh >= MIN_REFRESH_DELAY) {
+            lastRefresh = Clock.systemDefaultZone().millis();
+            Platform.runLater(() -> {
+                grid.getChildren().clear();
+                showColumnsAndRowsLabels();
+                showMap(new Vector2d(1, 1));
+            });
+        }
     }
 
     public int getFullEnergy() {
