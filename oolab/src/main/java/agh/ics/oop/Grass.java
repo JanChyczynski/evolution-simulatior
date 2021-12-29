@@ -2,7 +2,7 @@ package agh.ics.oop;
 
 public class Grass implements IMapElement {
     private final Vector2d position;
-    private int energy;
+    private final int energy;
 
     public Grass(Vector2d position, int energy) {
         this.position = position;

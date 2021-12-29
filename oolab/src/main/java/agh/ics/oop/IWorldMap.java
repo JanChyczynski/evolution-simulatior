@@ -46,11 +46,11 @@ public interface IWorldMap {
     Vector2d upperRightCorner();
 
     default int getWidth() {
-        return upperRightCorner().x() - bottomLeftCorner().x();
+        return upperRightCorner().x() - bottomLeftCorner().x()+1;
     }
 
     default int getHeight() {
-        return upperRightCorner().y() - bottomLeftCorner().y();
+        return upperRightCorner().y() - bottomLeftCorner().y()+1;
     }
 
     default boolean isWrapped(){

@@ -10,29 +10,17 @@ import javafx.scene.layout.VBox;
 public class SimulationGui {
     private SteppeJungleMap map;
     private SimulationEngine engine;
-    private ImageLoader images;
-    private Pane rootBox;
-    private StatisticsToFileGui toFileGui;
+    private final ImageLoader images;
+    private final Pane rootBox;
+    private final StatisticsToFileGui toFileGui;
 
     public SimulationGui(ImageLoader images, SimulationParameters params, int width, int height, boolean wrapped) {
         this.images = images;
-        try {
-            map = new SteppeJungleMap(params);
-            engine = new SimulationEngine(map, params);
-            System.out.println(map);
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            System.exit(1);
-        }
-        map.setWrapped(wrapped);
+        setupSimulation(params, wrapped);
 
-        MapGui mapGui = new MapGui(map, engine, images, params,(width)*13/20, (height)*5/6);
+        MapGui mapGui = new MapGui(map, engine, images, params,(width)*13/20, (height)*16/20);
         mapGui.init();
-        ToggleButton pauseButton = createPauseButton(engine, "pause");
-        ToggleButton topGenomeButton = createTopGenomeButton(mapGui, "mark top genome");
-        ToggleButton autoRepopulateButton = createAutoRepopulateButton(engine, "magic auto-repopulation");
-        HBox buttonsBox = new HBox();
-        buttonsBox.getChildren().addAll(pauseButton, topGenomeButton, autoRepopulateButton);
+        HBox buttonsBox = createButtonsBox(mapGui);
         toFileGui = new StatisticsToFileGui(engine);
         VBox mapBox = new VBox();
         mapBox.getChildren().addAll(mapGui.getRoot(), buttonsBox, toFileGui.getRoot());
@@ -43,9 +31,29 @@ public class SimulationGui {
         rootBox.getChildren().addAll(mapBox, statisticsGui.getRoot());
     }
 
+    private void setupSimulation(SimulationParameters params, boolean wrapped) {
+        try {
+            map = new SteppeJungleMap(params);
+            engine = new SimulationEngine(map, params);
+            System.out.println(map);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
+        map.setWrapped(wrapped);
+    }
+
+    private HBox createButtonsBox(MapGui mapGui) {
+        ToggleButton pauseButton = createPauseButton(engine, "pause");
+        ToggleButton topGenomeButton = createTopGenomeButton(mapGui, "mark top genome");
+        ToggleButton autoRepopulateButton = createAutoRepopulateButton(engine, "magic auto-repopulation");
+        HBox buttonsBox = new HBox();
+        buttonsBox.getChildren().addAll(pauseButton, topGenomeButton, autoRepopulateButton);
+        return buttonsBox;
+    }
 
     public void start(){
-        Thread engineThread = new Thread((Runnable) engine);
+        Thread engineThread = new Thread(engine);
         engineThread.start();
     }
 

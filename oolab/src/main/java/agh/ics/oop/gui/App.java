@@ -74,10 +74,9 @@ public class App extends Application {
         Label title = new Label("Enter simulations initial parameters to these beautifully aligned fields:");
 
         rootBox.getChildren().addAll(title, heightField.getRoot(), widthField.getRoot(), jungleRatioField.getRoot(),
-                grassEnergyField.getRoot(), initialPopulationField.getRoot(),
+                initialPopulationField.getRoot(), grassEnergyField.getRoot(),
                 startEnergyField.getRoot(), moveEnergyField.getRoot(), delayField.getRoot(),
                 goButton);
-
         rootBox.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(rootBox, WINDOW_WIDTH, WINDOW_HEIGHT);

@@ -56,6 +56,26 @@ public class SteppeJungleMap extends AbstractWorldMap{
     }
 
     public Vector2d getRandomPositionSatisfying(Function<Vector2d, Boolean> predicate, Vector2d bottomLeft, Vector2d upperRight) {
+        Vector2d randomPosition = getTrulyRandomPositionSatisfying(predicate, bottomLeft, upperRight);
+        if (randomPosition != null){
+            return randomPosition;
+        }
+
+        return getAnyPositionSatisfying(predicate, bottomLeft, upperRight);
+    }
+
+    private Vector2d getAnyPositionSatisfying(Function<Vector2d, Boolean> predicate, Vector2d bottomLeft, Vector2d upperRight) {
+        for (int x = bottomLeft.x(); x <= upperRight.x(); x++) {
+            for (int y = bottomLeft.y(); y <= upperRight.y(); y++) {
+                if(predicate.apply(new Vector2d(x, y))){
+                    return new Vector2d(x, y);
+                }
+            }
+        }
+        return null;
+    }
+
+    private Vector2d getTrulyRandomPositionSatisfying(Function<Vector2d, Boolean> predicate, Vector2d bottomLeft, Vector2d upperRight) {
         Vector2d position;
         int tries = 20;
         do {
@@ -64,19 +84,9 @@ public class SteppeJungleMap extends AbstractWorldMap{
         }
         while ((tries-- > 0) && !predicate.apply(position));
 
-        if(predicate.apply(position)){
-            return position;
-        }
-
-        for (int x = bottomLeft.x(); x <= upperRight.x(); x++) {
-            for (int y = bottomLeft.y(); y <= upperRight.y(); y++) {
-                if(predicate.apply(new Vector2d(x, y))){
-                    return new Vector2d(x, y);
-                }
-            }
-        }
-
-        return null;
+        return predicate.apply(position)?
+            position :
+            null;
     }
 
     public Vector2d getRandomPositionSatisfying(Function<Vector2d, Boolean> predicate){
@@ -110,8 +120,6 @@ public class SteppeJungleMap extends AbstractWorldMap{
         }
         super.remove(element);
     }
-
-
 
     public int getPlantsNumber() {
         return plantsNumber;
