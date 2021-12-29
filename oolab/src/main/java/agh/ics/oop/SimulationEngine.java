@@ -72,6 +72,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
             handleReproduction();
             worldMap.growGrass();
             updateStatistics();
+            notifyAllPositionObservers(new Vector2d(0,0), new Vector2d(0,0), null);
             try{
                 Thread.sleep(dayDelay);
             } catch (InterruptedException e) {
@@ -181,7 +182,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
 
     @Override
     public void positionChanged(Vector2d start, Vector2d end, IMapElement movedElement) {
-        notifyAllPositionObservers(start, end, movedElement);
+
     }
 
     @Override

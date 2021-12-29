@@ -31,13 +31,13 @@ public class MapGui implements IPositionChangeObserver {
     private final VBox root;
     private long lastRefresh;
 
-    public MapGui(AbstractWorldMap map, SimulationEngine engine, ImageLoader images, int width, int height) {
+    public MapGui(AbstractWorldMap map, SimulationEngine engine, ImageLoader images, SimulationParameters params, int width, int height) {
         this.map = map;
         cellWidth = width/(map.getWidth()+1);
         cellHeight = height/(map.getHeight()+1);
         cellSize = min(cellWidth, cellHeight);
 
-        fullEnergy = 100;
+        fullEnergy = params.startEnergy()+3*params.grassEnergy();
         this.images = images;
         this.engine = engine;
         markGenome = false;

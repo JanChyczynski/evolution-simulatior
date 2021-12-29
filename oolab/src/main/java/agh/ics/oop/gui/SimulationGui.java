@@ -25,7 +25,7 @@ public class SimulationGui {
             System.exit(1);
         }
 
-        MapGui mapGui = new MapGui(map, engine, images, (width)*13/20, (height)*5/6);
+        MapGui mapGui = new MapGui(map, engine, images, params,(width)*13/20, (height)*5/6);
         mapGui.init();
         ToggleButton pauseButton = createPauseButton(engine, "pause");
         ToggleButton topGenomeButton = createTopGenomeButton(mapGui, "mark top genome");
