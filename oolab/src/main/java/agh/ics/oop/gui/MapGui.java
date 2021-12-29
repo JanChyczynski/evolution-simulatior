@@ -3,23 +3,22 @@ package agh.ics.oop.gui;
 import agh.ics.oop.*;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.util.Duration;
 
 import java.time.Clock;
 import java.util.NoSuchElementException;
 
-import static javafx.util.Duration.millis;
+import static java.lang.Math.min;
 
 public class MapGui implements IPositionChangeObserver {
-    public static final int CELL_WIDTH  = 40;
-    public static final int CELL_HEIGHT = 40;
+    public int cellSize;
+    public int cellHeight;
+    public int cellWidth;
     private static final long MIN_REFRESH_DELAY = 30;
     private int fullEnergy;
     private final AbstractWorldMap map;
@@ -32,8 +31,12 @@ public class MapGui implements IPositionChangeObserver {
     private final VBox root;
     private long lastRefresh;
 
-    public MapGui(AbstractWorldMap map, SimulationEngine engine, ImageLoader images) {
+    public MapGui(AbstractWorldMap map, SimulationEngine engine, ImageLoader images, int width, int height) {
         this.map = map;
+        cellWidth = width/(map.getWidth()+1);
+        cellHeight = height/(map.getHeight()+1);
+        cellSize = min(cellWidth, cellHeight);
+
         fullEnergy = 100;
         this.images = images;
         this.engine = engine;
@@ -47,7 +50,7 @@ public class MapGui implements IPositionChangeObserver {
         root.getChildren().addAll(grid, tracker.getRoot());
 
         engine.addPositionObserver(this);
-        setCellSize(CELL_WIDTH, CELL_HEIGHT);
+        setCellSize(cellWidth, cellHeight);
     }
 
     public void init(){
@@ -99,8 +102,8 @@ public class MapGui implements IPositionChangeObserver {
     public void showMapElement(IMapElement element, int i, int j, GridPane grid) {
         Image image = images.getImage(element.representationImagePath());
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(CELL_WIDTH);
-        imageView.setFitHeight(CELL_HEIGHT);
+        imageView.setFitWidth(cellSize);
+        imageView.setFitHeight(cellSize);
         expressEnergy(element, imageView);
         imageView.setRotate(360/MapDirection.values().length * element.getOrientation().toInt());
         expressMarkedGene(element, imageView);

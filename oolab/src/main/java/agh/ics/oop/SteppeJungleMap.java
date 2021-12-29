@@ -58,7 +58,7 @@ public class SteppeJungleMap extends AbstractWorldMap{
         Vector2d position;
         int tries = 10;
         do {
-            position = new Vector2d(Randomizer.randInt(bottomLeft.x(), upperRight.y()),
+            position = new Vector2d(Randomizer.randInt(bottomLeft.x(), upperRight.x()),
                     Randomizer.randInt(bottomLeft.y(), upperRight.y()));
         }
         while ((tries-- > 0) && !predicate.apply(position));

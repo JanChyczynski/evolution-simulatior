@@ -44,4 +44,11 @@ public interface IWorldMap {
     Vector2d bottomLeftCorner();
 
     Vector2d upperRightCorner();
+
+    default int getWidth(){
+        return upperRightCorner().x()-bottomLeftCorner().x();
+    }
+    default int getHeight(){
+        return upperRightCorner().y()-bottomLeftCorner().y();
+    }
 }

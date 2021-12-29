@@ -1,9 +1,6 @@
 package agh.ics.oop.gui;
 
-import agh.ics.oop.IPausable;
-import agh.ics.oop.SimulationEngine;
-import agh.ics.oop.SimulationParameters;
-import agh.ics.oop.SteppeJungleMap;
+import agh.ics.oop.*;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
@@ -17,7 +14,7 @@ public class SimulationGui {
     private Pane rootBox;
     private StatisticsToFileGui toFileGui;
 
-    public SimulationGui(ImageLoader images, SimulationParameters params) {
+    public SimulationGui(ImageLoader images, SimulationParameters params, int width, int height) {
         this.images = images;
         try {
             map = new SteppeJungleMap(params);
@@ -28,7 +25,7 @@ public class SimulationGui {
             System.exit(1);
         }
 
-        MapGui mapGui = new MapGui(map, engine, images);
+        MapGui mapGui = new MapGui(map, engine, images, (width)*13/20, (height)*5/6);
         mapGui.init();
         ToggleButton pauseButton = createPauseButton(engine, "pause");
         ToggleButton topGenomeButton = createTopGenomeButton(mapGui, "mark top genome");

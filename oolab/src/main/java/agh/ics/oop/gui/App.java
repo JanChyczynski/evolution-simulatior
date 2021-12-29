@@ -4,21 +4,18 @@ import agh.ics.oop.*;
 import javafx.application.Application;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
 public class App extends Application {
+    public static final int WINDOW_WIDTH = 1920;
+    public static final int WINDOW_HEIGHT = 1080;
     private ImageLoader images;
 
     @Override
@@ -37,13 +34,13 @@ public class App extends Application {
 
         SimulationParameters params = getSimulationParameters(primaryStage);
 
-        SimulationGui sim1 = new SimulationGui(images, params);
-        SimulationGui sim2 = new SimulationGui(images, params);
+        SimulationGui sim1 = new SimulationGui(images, params, WINDOW_WIDTH/2, WINDOW_HEIGHT);
+        SimulationGui sim2 = new SimulationGui(images, params, WINDOW_WIDTH/2, WINDOW_HEIGHT);
 
         HBox rootBox = new HBox();
         rootBox.getChildren().addAll(sim1.getRoot(), sim2.getRoot());
 
-        Scene scene = new Scene(rootBox, 1920, 1080);
+        Scene scene = new Scene(rootBox, WINDOW_WIDTH, WINDOW_HEIGHT);
         Platform.runLater( () ->{
             primaryStage.setScene(scene);
             primaryStage.show();
@@ -83,7 +80,7 @@ public class App extends Application {
 
         rootBox.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(rootBox, 1920, 1080);
+        Scene scene = new Scene(rootBox, WINDOW_WIDTH, WINDOW_HEIGHT);
         Platform.runLater( () ->{
             primaryStage.setScene(scene);
             primaryStage.show();
