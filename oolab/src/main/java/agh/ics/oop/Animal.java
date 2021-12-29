@@ -45,7 +45,9 @@ public class Animal implements IMapElement, IPositionChangePublisher, ITrackable
     }
 
     public Vector2d getPosition() {
-        return position;
+        return map.isWrapped()?
+                position.wrapped(map.bottomLeftCorner(), map.upperRightCorner()) :
+                position;
     }
 
     @Override
@@ -87,6 +89,10 @@ public class Animal implements IMapElement, IPositionChangePublisher, ITrackable
     private void moveForward() {
         Vector2d newPosition = new Vector2d(position);
         newPosition = position.add(orientation.toUnitVector());
+        if(map.isWrapped())
+        {
+            newPosition = newPosition.wrapped(map.bottomLeftCorner(), map.upperRightCorner());
+        }
         if(map.canMoveTo(newPosition)){
             Vector2d oldPosition = position;
             position = newPosition;

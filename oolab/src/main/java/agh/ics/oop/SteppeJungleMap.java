@@ -10,6 +10,7 @@ public class SteppeJungleMap extends AbstractWorldMap{
     private final int grassEnergy;
     private Vector2d jungleBottomLeftCorner, jungleUpperRightCorner;
     private int plantsNumber;
+    private boolean isWrapped;
 
     public SteppeJungleMap(SimulationParameters params){
         this(params.height(), params.width(), params.jungleRatio(), params.grassEnergy());
@@ -114,5 +115,13 @@ public class SteppeJungleMap extends AbstractWorldMap{
 
     public int getPlantsNumber() {
         return plantsNumber;
+    }
+
+    public boolean isWrapped() {
+        return isWrapped;
+    }
+
+    public void setWrapped(boolean wrapped) {
+        isWrapped = wrapped;
     }
 }

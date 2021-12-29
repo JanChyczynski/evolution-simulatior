@@ -14,7 +14,7 @@ public class SimulationGui {
     private Pane rootBox;
     private StatisticsToFileGui toFileGui;
 
-    public SimulationGui(ImageLoader images, SimulationParameters params, int width, int height) {
+    public SimulationGui(ImageLoader images, SimulationParameters params, int width, int height, boolean wrapped) {
         this.images = images;
         try {
             map = new SteppeJungleMap(params);
@@ -24,6 +24,7 @@ public class SimulationGui {
             System.out.println(e.getMessage());
             System.exit(1);
         }
+        map.setWrapped(wrapped);
 
         MapGui mapGui = new MapGui(map, engine, images, params,(width)*13/20, (height)*5/6);
         mapGui.init();

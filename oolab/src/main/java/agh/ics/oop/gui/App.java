@@ -34,8 +34,8 @@ public class App extends Application {
 
         SimulationParameters params = getSimulationParameters(primaryStage);
 
-        SimulationGui sim1 = new SimulationGui(images, params, WINDOW_WIDTH/2, WINDOW_HEIGHT);
-        SimulationGui sim2 = new SimulationGui(images, params, WINDOW_WIDTH/2, WINDOW_HEIGHT);
+        SimulationGui sim1 = new SimulationGui(images, params, WINDOW_WIDTH/2, WINDOW_HEIGHT, true);
+        SimulationGui sim2 = new SimulationGui(images, params, WINDOW_WIDTH/2, WINDOW_HEIGHT, false);
 
         HBox rootBox = new HBox();
         rootBox.getChildren().addAll(sim1.getRoot(), sim2.getRoot());

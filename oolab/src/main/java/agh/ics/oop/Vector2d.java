@@ -37,6 +37,12 @@ public record Vector2d(int x, int y) {
         return new Vector2d(-x, -y);
     }
 
+    public Vector2d wrapped(Vector2d bottomLeftCorner, Vector2d upperRightCorner){
+        return new Vector2d(
+                x% (upperRightCorner.x()+1-bottomLeftCorner.x())+bottomLeftCorner.x(),
+                y% (upperRightCorner.y()+1-bottomLeftCorner.y())+bottomLeftCorner.y());
+    }
+
     @Override
     public String toString() {
         return "(" + x + "," + y + ")";

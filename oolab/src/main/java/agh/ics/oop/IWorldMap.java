@@ -45,10 +45,15 @@ public interface IWorldMap {
 
     Vector2d upperRightCorner();
 
-    default int getWidth(){
-        return upperRightCorner().x()-bottomLeftCorner().x();
+    default int getWidth() {
+        return upperRightCorner().x() - bottomLeftCorner().x();
     }
-    default int getHeight(){
-        return upperRightCorner().y()-bottomLeftCorner().y();
+
+    default int getHeight() {
+        return upperRightCorner().y() - bottomLeftCorner().y();
+    }
+
+    default boolean isWrapped(){
+        return false;
     }
 }
