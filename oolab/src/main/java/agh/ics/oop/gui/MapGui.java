@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
 
 import static java.lang.Math.min;
 
-public class MapGui implements IPositionChangeObserver {
+public class MapGui implements IMapStateObserver {
     public int cellSize;
     public int cellHeight;
     public int cellWidth;
@@ -49,7 +49,7 @@ public class MapGui implements IPositionChangeObserver {
         root = new VBox();
         root.getChildren().addAll(grid, tracker.getRoot());
 
-        engine.addPositionObserver(this);
+        engine.addMapStateObserver(this);
         setCellSize(cellWidth, cellHeight);
     }
 
@@ -147,7 +147,7 @@ public class MapGui implements IPositionChangeObserver {
     }
 
     @Override
-    public void positionChanged(Vector2d start, Vector2d end, IMapElement movedElement) {
+    public void mapStateChanged() {
         if(Clock.systemDefaultZone().millis()-lastRefresh >= MIN_REFRESH_DELAY) {
             lastRefresh = Clock.systemDefaultZone().millis();
             Platform.runLater(() -> {

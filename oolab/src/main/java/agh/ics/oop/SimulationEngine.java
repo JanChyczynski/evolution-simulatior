@@ -5,12 +5,12 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
-public class SimulationEngine implements IEngine, IPositionChangeObserver, Runnable, IPausable {
+public class SimulationEngine implements IEngine, Runnable, IPausable {
     public static final int MAX_TO_REPOPULATE = 5;
     private final SteppeJungleMap worldMap;
     private final Set<Animal> animals;
     private final Set<Animal> deadAnimals;
-    private final Set<IPositionChangeObserver> positionObservers;
+    private final Set<IMapStateObserver> positionObservers;
     private final Set<IStatisticsObserver> statisticsObservers;
     public final int dayDelay;
     private final int startEnergy, moveEnergy, loveMinEnergy;
@@ -51,7 +51,6 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
         }
         for(Animal animal : animals)
         {
-            animal.addPositionObserver(this);
             animal.setBirthDay(day);
         }
     }
@@ -76,7 +75,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
             worldMap.growGrass();
             if(repopulationsAvailable > 0) {handleRepopulation(); };
             updateStatistics();
-            notifyAllPositionObservers(new Vector2d(0,0), new Vector2d(0,0), null);
+            notifyAllMapStateObservers();
             try{
                 Thread.sleep(dayDelay);
             } catch (InterruptedException e) {
@@ -124,7 +123,6 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
                     Animal child = ((Animal) lovers.get(0)).makeLove((Animal) lovers.get(1));
                     animals.add(child);
                     child.setBirthDay(day);
-                    child.addPositionObserver(this);
                 }
 
             }
@@ -144,7 +142,6 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
                 }
             }
             for (Animal newAnimal : newAnimals){
-                newAnimal.addPositionObserver(this);
                 newAnimal.setBirthDay(day);
             }
             animals.addAll(newAnimals);
@@ -189,25 +186,18 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
         statisticsObservers.remove(observer);
     }
 
-    @Override
-    public void addPositionObserver(IPositionChangeObserver observer){
+    public void addMapStateObserver(IMapStateObserver observer){
         positionObservers.add(observer);
     }
 
-    @Override
-    public void removePositionObserver(IPositionChangeObserver observer){
+    public void removeMapStateObserver(IMapStateObserver observer){
         positionObservers.remove(observer);
     }
 
-    private void notifyAllPositionObservers(Vector2d newPosition, Vector2d oldPosition, IMapElement movedElement) {
-        for(IPositionChangeObserver observer : positionObservers){
-            observer.positionChanged(oldPosition, newPosition, movedElement);
+    private void notifyAllMapStateObservers() {
+        for(IMapStateObserver observer : positionObservers){
+            observer.mapStateChanged();
         }
-    }
-
-    @Override
-    public void positionChanged(Vector2d start, Vector2d end, IMapElement movedElement) {
-
     }
 
     @Override
