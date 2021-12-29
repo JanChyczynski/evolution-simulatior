@@ -15,6 +15,7 @@ public class SimulationGui {
     private SimulationEngine engine;
     private ImageLoader images;
     private Pane rootBox;
+    private StatisticsToFileGui toFileGui;
 
     public SimulationGui(ImageLoader images, SimulationParameters params) {
         this.images = images;
@@ -33,9 +34,9 @@ public class SimulationGui {
         ToggleButton topGenomeButton = createTopGenomeButton(mapGui, "mark top genome");
         HBox buttonsBox = new HBox();
         buttonsBox.getChildren().addAll(pauseButton, topGenomeButton);
-
+        toFileGui = new StatisticsToFileGui(engine);
         VBox mapBox = new VBox();
-        mapBox.getChildren().addAll(mapGui.getRoot(), buttonsBox);
+        mapBox.getChildren().addAll(mapGui.getRoot(), buttonsBox, toFileGui.getRoot());
 
         rootBox = new HBox();
         StatisticsGui statisticsGui = new StatisticsGui(engine);
