@@ -29,8 +29,9 @@ public class SimulationGui {
         mapGui.init();
         ToggleButton pauseButton = createPauseButton(engine, "pause");
         ToggleButton topGenomeButton = createTopGenomeButton(mapGui, "mark top genome");
+        ToggleButton autoRepopulateButton = createAutoRepopulateButton(engine, "magic auto-repopulation");
         HBox buttonsBox = new HBox();
-        buttonsBox.getChildren().addAll(pauseButton, topGenomeButton);
+        buttonsBox.getChildren().addAll(pauseButton, topGenomeButton, autoRepopulateButton);
         toFileGui = new StatisticsToFileGui(engine);
         VBox mapBox = new VBox();
         mapBox.getChildren().addAll(mapGui.getRoot(), buttonsBox, toFileGui.getRoot());
@@ -74,6 +75,20 @@ public class SimulationGui {
                 mapGui.setMarkGenome(true);
             } else {
                 mapGui.setMarkGenome(false);
+            }
+        });
+        return topGenomeButton;
+    }
+
+    private ToggleButton createAutoRepopulateButton(SimulationEngine engine, String text) {
+        ToggleButton topGenomeButton = new ToggleButton(text);
+        ToggleGroup group = new ToggleGroup();
+        topGenomeButton.setToggleGroup(group);
+        group.selectedToggleProperty().addListener((ov, toggle, new_toggle) -> {
+            if (new_toggle != null) {
+                engine.setAutoRepopulation(3);
+            } else {
+                engine.setAutoRepopulation(0);
             }
         });
         return topGenomeButton;

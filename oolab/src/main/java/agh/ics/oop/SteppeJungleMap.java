@@ -56,16 +56,21 @@ public class SteppeJungleMap extends AbstractWorldMap{
 
     public Vector2d getRandomPositionSatisfying(Function<Vector2d, Boolean> predicate, Vector2d bottomLeft, Vector2d upperRight) {
         Vector2d position;
-        int tries = 10;
+        int tries = 20;
         do {
             position = new Vector2d(Randomizer.randInt(bottomLeft.x(), upperRight.x()),
                     Randomizer.randInt(bottomLeft.y(), upperRight.y()));
         }
         while ((tries-- > 0) && !predicate.apply(position));
-        for (int x = bottomLeft.x(); x < upperRight.x(); x++) {
-            for (int y = bottomLeft.y(); y < upperRight.y(); y++) {
-                if(predicate.apply(position)){
-                    return position;
+
+        if(predicate.apply(position)){
+            return position;
+        }
+
+        for (int x = bottomLeft.x(); x <= upperRight.x(); x++) {
+            for (int y = bottomLeft.y(); y <= upperRight.y(); y++) {
+                if(predicate.apply(new Vector2d(x, y))){
+                    return new Vector2d(x, y);
                 }
             }
         }

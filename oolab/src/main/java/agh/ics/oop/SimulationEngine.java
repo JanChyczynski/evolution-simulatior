@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.isNull;
 
 public class SimulationEngine implements IEngine, IPositionChangeObserver, Runnable, IPausable {
+    public static final int MAX_TO_REPOPULATE = 5;
     private final SteppeJungleMap worldMap;
     private final Set<Animal> animals;
     private final Set<Animal> deadAnimals;
@@ -15,6 +16,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
     private final int startEnergy, moveEnergy, loveMinEnergy;
     private int day;
     private boolean paused;
+    private int repopulationsAvailable;
 
     public SimulationEngine(SteppeJungleMap worldMap, SimulationParameters params){
         this(worldMap, params.initialPopulation(), params.startEnergy(), params.moveEnergy(), params.delay());
@@ -31,6 +33,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
         this.dayDelay = dayDelay;
         day = 0;
         paused = false;
+        repopulationsAvailable = 0;
 
         animals = new HashSet<>();
         deadAnimals = new HashSet<>();
@@ -71,6 +74,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
             handleEating();
             handleReproduction();
             worldMap.growGrass();
+            if(repopulationsAvailable > 0) {handleRepopulation(); };
             updateStatistics();
             notifyAllPositionObservers(new Vector2d(0,0), new Vector2d(0,0), null);
             try{
@@ -124,6 +128,27 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
                 }
 
             }
+        }
+    }
+
+    private void handleRepopulation() {
+        if(repopulationsAvailable > 0 && animals.size() <= MAX_TO_REPOPULATE){
+            Set<Animal> newAnimals = new HashSet<>();
+            for (Iterator<Animal> iterator = animals.iterator(); iterator.hasNext(); ) {
+                Animal animal = iterator.next();
+                Vector2d position = worldMap.getRandomPositionSatisfying((p) ->!worldMap.isOccupied(p));
+                if(!isNull(position))
+                {
+                    newAnimals.add(new Animal(worldMap, position,
+                    startEnergy, animal.getGenome()));
+                }
+            }
+            for (Animal newAnimal : newAnimals){
+                newAnimal.addPositionObserver(this);
+                newAnimal.setBirthDay(day);
+            }
+            animals.addAll(newAnimals);
+            repopulationsAvailable--;
         }
     }
 
@@ -207,4 +232,7 @@ public class SimulationEngine implements IEngine, IPositionChangeObserver, Runna
         return day;
     }
 
+    public void setAutoRepopulation(int available) {
+        repopulationsAvailable = available;
+    }
 }
